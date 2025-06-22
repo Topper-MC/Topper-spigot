@@ -88,22 +88,22 @@
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-agent-holder</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-agent-update</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-agent-snapshot</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-agent-storage</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
@@ -113,17 +113,17 @@
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-query-holder</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-query-snapshot</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-query-forward</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
@@ -133,17 +133,17 @@
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-storage-simple-converter</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-storage-simple-sql-config</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-value-string</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>

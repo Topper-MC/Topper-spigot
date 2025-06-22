@@ -35,7 +35,7 @@
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-storage-simple-builder</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.xerial</groupId>

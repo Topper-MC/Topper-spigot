@@ -14,7 +14,7 @@
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-agent-runnable</artifactId>
-            <version>${project.version}</version>
+            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.projectunified</groupId>
