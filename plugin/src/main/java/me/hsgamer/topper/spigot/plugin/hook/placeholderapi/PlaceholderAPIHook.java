@@ -28,7 +28,7 @@ public class PlaceholderAPIHook implements Loadable {
                     .map(Object::toString)
                     .map(String::toLowerCase)
                     .map(Boolean::parseBoolean)
-                    .orElse(false);
+                    .orElse(true);
             return new PlaceholderValueProvider(placeholder, isOnlineOnly)
                     .thenApply(StringDeformatters.deformatterOrIdentity(map))
                     .thenApply(ParseUtil::parsePlaceholderNumber)
