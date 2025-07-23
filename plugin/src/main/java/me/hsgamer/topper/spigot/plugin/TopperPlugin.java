@@ -17,8 +17,8 @@ import me.hsgamer.topper.spigot.plugin.manager.EntryConsumeManager;
 import me.hsgamer.topper.spigot.plugin.manager.QueryForwardManager;
 import me.hsgamer.topper.spigot.plugin.manager.TopManager;
 import me.hsgamer.topper.spigot.plugin.manager.TopQueryManager;
-import me.hsgamer.topper.spigot.storage.simple.SpigotDataStorageBuilder;
-import me.hsgamer.topper.storage.simple.builder.DataStorageBuilder;
+import me.hsgamer.topper.spigot.storage.SpigotDataStorageBuilder;
+import me.hsgamer.topper.storage.bundle.DataStorageBuilder;
 import org.bstats.bukkit.Metrics;
 
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class TopperPlugin extends BasePlugin {
     @Override
     protected List<Object> getComponents() {
         return Arrays.asList(
-                new DataStorageBuilder(),
+                SpigotDataStorageBuilder.register(new DataStorageBuilder()),
                 new ValueProviderBuilder(),
                 ConfigGenerator.newInstance(MainConfig.class, new BukkitConfig(this)),
                 ConfigGenerator.newInstance(MessageConfig.class, new BukkitConfig(this, "messages.yml")),
@@ -55,7 +55,6 @@ public class TopperPlugin extends BasePlugin {
     @Override
     public void load() {
         MessageUtils.setPrefix(get(MessageConfig.class)::getPrefix);
-        SpigotDataStorageBuilder.register(get(DataStorageBuilder.class));
     }
 
     @Override

@@ -32,7 +32,7 @@ public class PlaceholderAPIHook implements Loadable {
             return new PlaceholderValueProvider(placeholder, isOnlineOnly)
                     .thenApply(StringDeformatters.deformatterOrIdentity(map))
                     .thenApply(ParseUtil::parsePlaceholderNumber)
-                    .keyMapper(Bukkit::getOfflinePlayer);
+                    .beforeApply(Bukkit::getOfflinePlayer);
         }, "placeholderapi", "placeholder", "papi");
         plugin.get(QueryForwardManager.class).addForwarder(queryForwarder);
     }

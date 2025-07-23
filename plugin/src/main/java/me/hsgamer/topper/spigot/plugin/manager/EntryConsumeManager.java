@@ -1,7 +1,7 @@
 package me.hsgamer.topper.spigot.plugin.manager;
 
 import io.github.projectunified.minelib.plugin.base.Loadable;
-import me.hsgamer.topper.core.DataEntry;
+import me.hsgamer.topper.data.core.DataEntry;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.event.GenericEntryUpdateEvent;
 import org.bukkit.Bukkit;

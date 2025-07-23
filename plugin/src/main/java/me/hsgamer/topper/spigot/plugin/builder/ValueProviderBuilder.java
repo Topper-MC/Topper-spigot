@@ -14,7 +14,7 @@ public class ValueProviderBuilder extends FunctionalMassBuilder<Map<String, Obje
             String statistic = Optional.ofNullable(map.get("statistic")).map(Objects::toString).orElse(null);
             List<String> materials = Optional.ofNullable(map.get("material")).map(CollectionUtils::createStringListFromObject).orElse(Collections.emptyList());
             List<String> entityTypes = Optional.ofNullable(map.get("entity-type")).map(CollectionUtils::createStringListFromObject).orElse(Collections.emptyList());
-            return StatisticValueProvider.fromRaw(statistic, materials, entityTypes).thenApply(Integer::doubleValue).keyMapper(Bukkit::getPlayer);
+            return StatisticValueProvider.fromRaw(statistic, materials, entityTypes).thenApply(Integer::doubleValue).beforeApply(Bukkit::getPlayer);
         }, "statistic", "stat");
     }
 

@@ -7,9 +7,9 @@
         <version>4.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>topper-spigot-storage-simple</artifactId>
+    <artifactId>topper-spigot-storage</artifactId>
 
-    <name>Topper Spigot Storage Simple</name>
+    <name>Topper Spigot Storage</name>
     <dependencies>
         <dependency>
             <groupId>me.hsgamer</groupId>
@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
-            <artifactId>topper-storage-simple-builder</artifactId>
+            <artifactId>topper-storage-bundle</artifactId>
             <version>${topper.version}</version>
             <exclusions>
                 <exclusion>

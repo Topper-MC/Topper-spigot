@@ -33,7 +33,7 @@ public class MiniPlaceholdersHook implements Loadable {
             return new MiniPlaceholderValueProvider(placeholder)
                     .thenApply(StringDeformatters.deformatterOrIdentity(map))
                     .thenApply(ParseUtil::parsePlaceholderNumber)
-                    .keyMapper(Bukkit::getPlayer);
+                    .beforeApply(Bukkit::getPlayer);
         }, "miniplaceholders", "miniplaceholder", "mini-placeholders", "mini-placeholder");
         plugin.get(QueryForwardManager.class).addForwarder(context -> queryForwarder.accept(new QueryForwardContext<Player>() {
             @Override

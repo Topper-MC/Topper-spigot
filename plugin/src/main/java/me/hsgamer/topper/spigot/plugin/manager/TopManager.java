@@ -5,14 +5,17 @@ import me.hsgamer.hscore.bukkit.config.BukkitConfig;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.holder.NumberTopHolder;
+import me.hsgamer.topper.storage.bundle.DataStorageBuilder;
+import me.hsgamer.topper.storage.bundle.DataStorageSetting;
+import me.hsgamer.topper.storage.bundle.DataStorageSupplier;
+import me.hsgamer.topper.storage.bundle.ValueConverter;
 import me.hsgamer.topper.storage.core.DataStorage;
-import me.hsgamer.topper.storage.simple.builder.DataStorageBuilder;
-import me.hsgamer.topper.storage.simple.config.DatabaseConfig;
-import me.hsgamer.topper.storage.simple.converter.NumberConverter;
-import me.hsgamer.topper.storage.simple.converter.UUIDConverter;
-import me.hsgamer.topper.storage.simple.setting.DataStorageSetting;
-import me.hsgamer.topper.storage.simple.setting.DatabaseSetting;
-import me.hsgamer.topper.storage.simple.supplier.DataStorageSupplier;
+import me.hsgamer.topper.storage.flat.converter.NumberFlatValueConverter;
+import me.hsgamer.topper.storage.flat.converter.UUIDFlatValueConverter;
+import me.hsgamer.topper.storage.sql.config.SqlDatabaseConfig;
+import me.hsgamer.topper.storage.sql.converter.NumberSqlValueConverter;
+import me.hsgamer.topper.storage.sql.converter.UUIDSqlValueConverter;
+import me.hsgamer.topper.storage.sql.core.SqlDatabaseSetting;
 
 import java.io.File;
 import java.util.*;
@@ -32,8 +35,8 @@ public class TopManager implements Loadable {
                 instance.get(MainConfig.class).getStorageType(),
                 new DataStorageSetting() {
                     @Override
-                    public DatabaseSetting getDatabaseSetting() {
-                        return new DatabaseConfig("topper", new BukkitConfig(instance, "database.yml"));
+                    public SqlDatabaseSetting getDatabaseSetting() {
+                        return new SqlDatabaseConfig("topper", new BukkitConfig(instance, "database.yml"));
                     }
 
                     @Override
@@ -42,7 +45,6 @@ public class TopManager implements Loadable {
                     }
                 }
         );
-        storageSupplier.enable();
         instance.get(MainConfig.class).getHolders().forEach((key, value) -> {
             NumberTopHolder topHolder = new NumberTopHolder(instance, key, value);
             topHolder.register();
@@ -54,7 +56,6 @@ public class TopManager implements Loadable {
     public void disable() {
         topHolders.values().forEach(NumberTopHolder::unregister);
         topHolders.clear();
-        storageSupplier.disable();
     }
 
     public DataStorageSupplier getStorageSupplier() {
@@ -64,8 +65,12 @@ public class TopManager implements Loadable {
     public DataStorage<UUID, Double> buildStorage(String name) {
         return storageSupplier.getStorage(
                 name,
-                new UUIDConverter("uuid"),
-                new NumberConverter<>("value", true, Number::doubleValue)
+                ValueConverter.of(
+                        new UUIDFlatValueConverter(),
+                        new NumberFlatValueConverter<>(Number::doubleValue),
+                        new UUIDSqlValueConverter("uuid"),
+                        new NumberSqlValueConverter<>("value", true, Number::doubleValue)
+                )
         );
     }
 
