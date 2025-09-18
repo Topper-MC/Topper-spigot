@@ -94,6 +94,7 @@ public class NumberTopHolder extends SimpleDataHolder<UUID, Double> implements A
         this.snapshotAgent = SnapshotAgent.create(this);
         boolean reverseOrder = Optional.ofNullable(map.get("reverse")).map(String::valueOf).map(Boolean::parseBoolean).orElse(false);
         snapshotAgent.setComparator(reverseOrder ? Comparator.naturalOrder() : Comparator.reverseOrder());
+        snapshotAgent.setFilter(entry -> entry.getValue() != null);
         agents.add(snapshotAgent);
         agents.add(new SpigotRunnableAgent(snapshotAgent, AsyncScheduler.get(instance), 20L));
 
@@ -121,11 +122,6 @@ public class NumberTopHolder extends SimpleDataHolder<UUID, Double> implements A
                 ));
             }
         });
-    }
-
-    @Override
-    public Double getDefaultValue() {
-        return 0D;
     }
 
     @Override
