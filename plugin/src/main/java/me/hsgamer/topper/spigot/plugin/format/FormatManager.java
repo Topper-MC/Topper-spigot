@@ -1,10 +1,10 @@
 package me.hsgamer.topper.spigot.plugin.format;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FormatManager {
-    private static final Map<String, Format> formats = new LinkedHashMap<>();
+    private static final Map<String, Format> formats = new ConcurrentHashMap<>();
     private static Format defaultFormat = new DefaultFormat();
 
     static {
