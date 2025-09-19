@@ -1,61 +1,65 @@
 package me.hsgamer.topper.spigot.plugin.format;
 
-import java.text.DecimalFormat;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * The default format that converts numbers to K/M format
  */
 public class DefaultFormat implements Format {
-    private static final NavigableMap<Long, String> SUFFIXES = new TreeMap<>();
+    private static final String[] SUFFIXES = {"", "K", "M", "B", "T", "P", "E"};
+    private static final ConcurrentMap<Long, String> PRECOMPUTED_FORMATS = new ConcurrentHashMap<>();
+
     static {
-        SUFFIXES.put(1_000L, "k");
-        SUFFIXES.put(1_000_000L, "M");
-        SUFFIXES.put(1_000_000_000L, "B");
-        SUFFIXES.put(1_000_000_000_000L, "T");
-        SUFFIXES.put(1_000_000_000_000_000L, "Q");
-        SUFFIXES.put(1_000_000_000_000_000_000L, "E"); // Add just in case of extremely large numbers
+        precomputeFormats();
     }
 
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,###.##");
-
-    @Override
-    public double toDouble(String input) throws NumberFormatException {
-        try {
-            input = input.replaceAll("[,\\s]", "");
-            String upperInput = input.toUpperCase();
-            if (upperInput.endsWith("K")) {
-                return Double.parseDouble(input.substring(0, input.length() - 1)) * 1000;
-            } else if (upperInput.endsWith("M")) {
-                return Double.parseDouble(input.substring(0, input.length() - 1)) * 1_000_000;
-            } else if (upperInput.endsWith("B")) {
-                return Double.parseDouble(input.substring(0, input.length() - 1)) * 1_000_000_000;
-            }
-            
-            return Double.parseDouble(input);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Invalid number format: " + input);
+    private static void precomputeFormats() {
+        for (long i = 1; i <= 100_000; i++) {
+            PRECOMPUTED_FORMATS.put(i, computeFormat(i));
         }
+    }
+
+    private static String computeFormat(double number) {
+        if (number < 1000) {
+            return (number == Math.floor(number)) ? String.format("%.0f", number) : String.format("%.2f", number);
+        }
+
+        int exp = (int) (Math.log10(number) / 3);
+        if (exp >= SUFFIXES.length) {
+            exp = SUFFIXES.length - 1;
+        }
+
+        double scaled = number / Math.pow(1000, exp);
+        return String.format("%.2f%s", scaled, SUFFIXES[exp]);
+    }
+
+    private static String formatNumber(double number) {
+        if (number <= 100_000) {
+            long rounded = Math.round(number);
+            return PRECOMPUTED_FORMATS.getOrDefault(rounded, computeFormat(number));
+        }
+        return computeFormat(number);
     }
 
     @Override
     public String toString(double input) {
-        if (input < 0) {
-            return "-" + toString(-input);
-        }
+        return formatNumber(input);
+    }
 
-        Long divider = SUFFIXES.floorKey((long) input);
-        if (divider == null) {
-            return FORMAT.format(input);
+    @Override
+    public double toDouble(String input) throws NumberFormatException {
+        for (int i = SUFFIXES.length - 1; i >= 0; i--) {
+            if (input.endsWith(SUFFIXES[i])) {
+                String numberPart = input.substring(0, input.length() - SUFFIXES[i].length());
+                return Double.parseDouble(numberPart) * Math.pow(1000, i);
+            }
         }
-
-        double value = input / divider;
-        return FORMAT.format(value) + SUFFIXES.get(divider);
+        return Double.parseDouble(input);
     }
 
     @Override
     public String getName() {
-        return "Default";
+        return "default";
     }
 }
