@@ -86,8 +86,9 @@ public interface MainConfig {
             "    - ''",
             "    - k",
             "    - M",
-            "    - G",
-            "    - T"
+            "    - B",
+            "    - T",
+            "    - Q"
     })
     default Map<String, Map<String, Object>> getCustomFormats() {
         return Collections.emptyMap();
