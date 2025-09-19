@@ -1,5 +1,11 @@
 package me.hsgamer.topper.spigot.plugin;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+
+import org.bstats.bukkit.Metrics;
+
 import io.github.projectunified.minelib.plugin.base.BasePlugin;
 import io.github.projectunified.minelib.plugin.command.CommandComponent;
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
@@ -19,11 +25,6 @@ import me.hsgamer.topper.spigot.plugin.manager.TopManager;
 import me.hsgamer.topper.spigot.plugin.manager.TopQueryManager;
 import me.hsgamer.topper.spigot.storage.SpigotDataStorageBuilder;
 import me.hsgamer.topper.storage.bundle.DataStorageBuilder;
-import org.bstats.bukkit.Metrics;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
 
 public class TopperPlugin extends BasePlugin {
     public static final String GROUP = "topper";
@@ -73,7 +74,7 @@ public class TopperPlugin extends BasePlugin {
                         getLogger().info("You are using the latest version");
                     } else {
                         getLogger().warning("There is an available update");
-                        getLogger().warning("New Version: " + output);
+                        getLogger().log(Level.WARNING, "New Version: {0}", output);
                     }
                 }
             });
