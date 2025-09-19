@@ -31,7 +31,8 @@ public class DefaultFormat implements Format {
         }
 
         double scaled = number / Math.pow(1000, exp);
-        return String.format("%.2f%s", scaled, SUFFIXES[exp]);
+        double truncated = Math.floor(scaled * 100d) / 100d;
+        return String.format("%.2f%s", truncated, SUFFIXES[exp]);
     }
 
     private static String formatNumber(double number) {
