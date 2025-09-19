@@ -1,12 +1,12 @@
 package me.hsgamer.topper.spigot.plugin.config;
 
+import java.util.Collections;
+import java.util.Map;
+
 import me.hsgamer.hscore.config.Config;
 import me.hsgamer.hscore.config.annotation.Comment;
 import me.hsgamer.hscore.config.annotation.ConfigPath;
 import me.hsgamer.topper.spigot.plugin.config.converter.StringStringObjectMapConverter;
-
-import java.util.Collections;
-import java.util.Map;
 
 public interface MainConfig {
     @ConfigPath(value = "holders", converter = StringStringObjectMapConverter.class, priority = 1)
@@ -75,6 +75,22 @@ public interface MainConfig {
     })
     default String getStorageType() {
         return "flat";
+    }
+
+    @ConfigPath(value = "custom-formats", converter = StringStringObjectMapConverter.class)
+    @Comment({
+            "Custom number formats. Each format will be registered with DefaultFormat using specified suffixes.",
+            "Example:",
+            "french:",
+            "  suffixes:",
+            "    - ''",
+            "    - k",
+            "    - M",
+            "    - G",
+            "    - T"
+    })
+    default Map<String, Map<String, Object>> getCustomFormats() {
+        return Collections.emptyMap();
     }
 
     void reloadConfig();

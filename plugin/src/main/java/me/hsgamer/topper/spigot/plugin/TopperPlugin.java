@@ -17,6 +17,7 @@ import me.hsgamer.topper.spigot.plugin.command.GetTopListCommand;
 import me.hsgamer.topper.spigot.plugin.command.ReloadCommand;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
+import me.hsgamer.topper.spigot.plugin.format.FormatManager;
 import me.hsgamer.topper.spigot.plugin.hook.HookSystem;
 import me.hsgamer.topper.spigot.plugin.listener.JoinListener;
 import me.hsgamer.topper.spigot.plugin.manager.EntryConsumeManager;
@@ -60,6 +61,7 @@ public class TopperPlugin extends BasePlugin {
 
     @Override
     public void enable() {
+        FormatManager.init(get(MainConfig.class));
         new Metrics(this, 14938);
         if (getDescription().getVersion().contains("SNAPSHOT")) {
             getLogger().warning("You are using the development version");
