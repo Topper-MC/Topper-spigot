@@ -2,12 +2,18 @@ package me.hsgamer.topper.spigot.plugin.format;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class FormatManager {
-    private static final Map<String, Format> formats = new ConcurrentHashMap<>();
+    private static volatile ConcurrentMap<String, Format> formats;
     private static Format defaultFormat = new DefaultFormat();
 
     static {
+        initializeFormats();
+    }
+
+    private static void initializeFormats() {
+        formats = new ConcurrentHashMap<>();
         register(new DefaultFormat());
         register(new RegularFormat());
     }
@@ -19,6 +25,17 @@ public class FormatManager {
      */
     public static void register(Format format) {
         formats.put(format.getName().toLowerCase(), format);
+    }
+
+    /**
+     * Register formats in parallel
+     *
+     * @param formatsToRegister the formats to register
+     */
+    public static void registerAllParallel(Map<String, Format> formatsToRegister) {
+        formatsToRegister.entrySet().parallelStream().forEach(entry ->
+            formats.put(entry.getKey().toLowerCase(), entry.getValue())
+        );
     }
 
     /**
