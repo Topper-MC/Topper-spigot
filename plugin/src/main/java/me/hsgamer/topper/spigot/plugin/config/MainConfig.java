@@ -81,14 +81,14 @@ public interface MainConfig {
     @Comment({
             "Custom number formats. Each format will be registered with DefaultFormat using specified suffixes.",
             "Example:",
-            "french:",
+            "default:",
             "  suffixes:",
-            "    - ''",
-            "    - k",
-            "    - M",
-            "    - B",
-            "    - T",
-            "    - Q"
+            "    1000: k",
+            "    1000000: M",
+            "    1000000000: B",
+            "    1000000000000: T",
+            "    1000000000000000: Q",
+            "    1000000000000000000: Qt"
     })
     default Map<String, Map<String, Object>> getCustomFormats() {
         return Collections.emptyMap();
