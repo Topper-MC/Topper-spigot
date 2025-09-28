@@ -6,19 +6,13 @@ import me.hsgamer.hscore.bukkit.config.BukkitConfig;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.checker.spigotmc.SpigotVersionChecker;
 import me.hsgamer.hscore.config.proxy.ConfigGenerator;
-import me.hsgamer.topper.spigot.plugin.builder.ValueProviderBuilder;
 import me.hsgamer.topper.spigot.plugin.command.GetTopListCommand;
 import me.hsgamer.topper.spigot.plugin.command.ReloadCommand;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
 import me.hsgamer.topper.spigot.plugin.hook.HookSystem;
 import me.hsgamer.topper.spigot.plugin.listener.JoinListener;
-import me.hsgamer.topper.spigot.plugin.manager.EntryConsumeManager;
-import me.hsgamer.topper.spigot.plugin.manager.QueryForwardManager;
-import me.hsgamer.topper.spigot.plugin.manager.TopManager;
-import me.hsgamer.topper.spigot.plugin.manager.TopQueryManager;
-import me.hsgamer.topper.spigot.storage.SpigotDataStorageBuilder;
-import me.hsgamer.topper.storage.bundle.DataStorageBuilder;
+import me.hsgamer.topper.spigot.plugin.manager.*;
 import org.bstats.bukkit.Metrics;
 
 import java.util.Arrays;
@@ -31,10 +25,11 @@ public class TopperPlugin extends BasePlugin {
     @Override
     protected List<Object> getComponents() {
         return Arrays.asList(
-                SpigotDataStorageBuilder.register(new DataStorageBuilder()),
-                new ValueProviderBuilder(),
                 ConfigGenerator.newInstance(MainConfig.class, new BukkitConfig(this)),
                 ConfigGenerator.newInstance(MessageConfig.class, new BukkitConfig(this, "messages.yml")),
+
+                new ValueProviderManager(),
+                new StorageManager(),
 
                 new HookSystem(this),
 

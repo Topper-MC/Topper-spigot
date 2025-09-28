@@ -13,11 +13,11 @@ import me.hsgamer.topper.data.core.DataEntry;
 import me.hsgamer.topper.data.simple.SimpleDataHolder;
 import me.hsgamer.topper.spigot.agent.runnable.SpigotRunnableAgent;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
-import me.hsgamer.topper.spigot.plugin.builder.ValueProviderBuilder;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.holder.display.ValueDisplay;
 import me.hsgamer.topper.spigot.plugin.manager.EntryConsumeManager;
 import me.hsgamer.topper.spigot.plugin.manager.TopManager;
+import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.value.core.ValueProvider;
 import me.hsgamer.topper.value.core.ValueWrapper;
 import org.bukkit.Bukkit;
@@ -47,7 +47,7 @@ public class NumberTopHolder extends SimpleDataHolder<UUID, Double> implements A
         agents.add(new SpigotRunnableAgent(storageAgent, AsyncScheduler.get(instance), instance.get(MainConfig.class).getTaskSaveDelay()));
         entryAgents.add(storageAgent);
 
-        ValueProvider<UUID, Double> valueProvider = instance.get(ValueProviderBuilder.class).build(map).orElseGet(() -> {
+        ValueProvider<UUID, Double> valueProvider = instance.get(ValueProviderManager.class).build(map).orElseGet(() -> {
             instance.getLogger().warning("No value provider found for " + name);
             return ValueProvider.empty();
         });

@@ -2,8 +2,8 @@ package me.hsgamer.topper.spigot.plugin.hook.placeholderapi;
 
 import io.github.projectunified.minelib.plugin.base.Loadable;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
-import me.hsgamer.topper.spigot.plugin.builder.ValueProviderBuilder;
 import me.hsgamer.topper.spigot.plugin.manager.QueryForwardManager;
+import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.plugin.util.ParseUtil;
 import me.hsgamer.topper.spigot.query.forward.placeholderapi.PlaceholderQueryForwarder;
 import me.hsgamer.topper.spigot.value.placeholderapi.PlaceholderValueProvider;
@@ -22,7 +22,7 @@ public class PlaceholderAPIHook implements Loadable {
 
     @Override
     public void load() {
-        plugin.get(ValueProviderBuilder.class).register(map -> {
+        plugin.get(ValueProviderManager.class).register(map -> {
             String placeholder = Optional.ofNullable(map.get("placeholder")).map(Object::toString).orElse("");
             boolean isOnlineOnly = Optional.ofNullable(map.get("online"))
                     .map(Object::toString)

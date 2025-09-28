@@ -5,10 +5,8 @@ import me.hsgamer.hscore.bukkit.config.BukkitConfig;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.holder.NumberTopHolder;
-import me.hsgamer.topper.storage.bundle.DataStorageBuilder;
-import me.hsgamer.topper.storage.bundle.DataStorageSetting;
-import me.hsgamer.topper.storage.bundle.DataStorageSupplier;
-import me.hsgamer.topper.storage.bundle.ValueConverter;
+import me.hsgamer.topper.spigot.plugin.storage.DataStorageSupplier;
+import me.hsgamer.topper.spigot.plugin.storage.DataStorageSupplierSetting;
 import me.hsgamer.topper.storage.core.DataStorage;
 import me.hsgamer.topper.storage.flat.converter.NumberFlatValueConverter;
 import me.hsgamer.topper.storage.flat.converter.UUIDFlatValueConverter;
@@ -31,9 +29,9 @@ public class TopManager implements Loadable {
 
     @Override
     public void enable() {
-        storageSupplier = instance.get(DataStorageBuilder.class).buildSupplier(
+        storageSupplier = instance.get(StorageManager.class).getSupplier(
                 instance.get(MainConfig.class).getStorageType(),
-                new DataStorageSetting() {
+                new DataStorageSupplierSetting() {
                     @Override
                     public SqlDatabaseSetting getDatabaseSetting() {
                         return new SqlDatabaseConfig("topper", new BukkitConfig(instance, "database.yml"));
@@ -65,12 +63,10 @@ public class TopManager implements Loadable {
     public DataStorage<UUID, Double> buildStorage(String name) {
         return storageSupplier.getStorage(
                 name,
-                ValueConverter.of(
-                        new UUIDFlatValueConverter(),
-                        new NumberFlatValueConverter<>(Number::doubleValue),
-                        new UUIDSqlValueConverter("uuid"),
-                        new NumberSqlValueConverter<>("value", true, Number::doubleValue)
-                )
+                new UUIDFlatValueConverter(),
+                new NumberFlatValueConverter<>(Number::doubleValue),
+                new UUIDSqlValueConverter("uuid"),
+                new NumberSqlValueConverter<>("value", true, Number::doubleValue)
         );
     }
 

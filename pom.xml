@@ -10,7 +10,6 @@
     <version>4.0.0-SNAPSHOT</version>
     <modules>
         <module>agent-runnable</module>
-        <module>storage</module>
         <module>plugin</module>
         <module>value</module>
         <module>query-forward</module>
@@ -49,7 +48,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <minelib.version>1.2.5</minelib.version>
-        <topper.version>4.0.0</topper.version>
+        <topper.version>4.4.0</topper.version>
         <core.version>4.6.0</core.version>
         <java.version>1.8</java.version>
     </properties>

@@ -4,8 +4,8 @@ import io.github.projectunified.minelib.plugin.base.Loadable;
 import me.hsgamer.topper.query.core.QueryResult;
 import me.hsgamer.topper.query.forward.QueryForwardContext;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
-import me.hsgamer.topper.spigot.plugin.builder.ValueProviderBuilder;
 import me.hsgamer.topper.spigot.plugin.manager.QueryForwardManager;
+import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.plugin.util.ParseUtil;
 import me.hsgamer.topper.spigot.query.forward.miniplaceholders.MiniPlaceholdersQueryForwarder;
 import me.hsgamer.topper.spigot.value.miniplaceholders.MiniPlaceholderValueProvider;
@@ -28,7 +28,7 @@ public class MiniPlaceholdersHook implements Loadable {
 
     @Override
     public void load() {
-        plugin.get(ValueProviderBuilder.class).register(map -> {
+        plugin.get(ValueProviderManager.class).register(map -> {
             String placeholder = Optional.ofNullable(map.get("placeholder")).map(Object::toString).orElse("");
             return new MiniPlaceholderValueProvider(placeholder)
                     .thenApply(StringDeformatters.deformatterOrIdentity(map))

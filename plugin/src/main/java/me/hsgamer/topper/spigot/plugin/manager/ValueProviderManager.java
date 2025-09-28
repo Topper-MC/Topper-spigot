@@ -1,4 +1,4 @@
-package me.hsgamer.topper.spigot.plugin.builder;
+package me.hsgamer.topper.spigot.plugin.manager;
 
 import me.hsgamer.hscore.builder.FunctionalMassBuilder;
 import me.hsgamer.hscore.common.CollectionUtils;
@@ -8,8 +8,8 @@ import org.bukkit.Bukkit;
 
 import java.util.*;
 
-public class ValueProviderBuilder extends FunctionalMassBuilder<Map<String, Object>, ValueProvider<UUID, Double>> {
-    public ValueProviderBuilder() {
+public class ValueProviderManager extends FunctionalMassBuilder<Map<String, Object>, ValueProvider<UUID, Double>> {
+    public ValueProviderManager() {
         register(map -> {
             String statistic = Optional.ofNullable(map.get("statistic")).map(Objects::toString).orElse(null);
             List<String> materials = Optional.ofNullable(map.get("material")).map(CollectionUtils::createStringListFromObject).orElse(Collections.emptyList());
