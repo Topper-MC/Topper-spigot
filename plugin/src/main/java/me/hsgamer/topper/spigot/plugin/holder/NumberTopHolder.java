@@ -23,6 +23,7 @@ import me.hsgamer.topper.value.core.ValueWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -34,8 +35,21 @@ public class NumberTopHolder extends SimpleDataHolder<UUID, Double> implements A
     private final StorageAgent<UUID, Double> storageAgent;
     private final UpdateAgent<UUID, Double> updateAgent;
     private final SnapshotAgent<UUID, Double> snapshotAgent;
+    private final Double defaultValue;
 
     public NumberTopHolder(TopperPlugin instance, String name, Map<String, Object> map) {
+        this.defaultValue = Optional.ofNullable(map.get("default-value"))
+                .map(Object::toString)
+                .map(s -> {
+                    try {
+                        return Double.parseDouble(s);
+                    } catch (NumberFormatException e) {
+                        instance.getLogger().log(Level.WARNING, "Invalid default value for " + name + ": " + s + ". Fallback to null", e);
+                        return null;
+                    }
+                })
+                .orElse(null);
+
         this.agents = new ArrayList<>();
         this.entryAgents = new ArrayList<>();
         this.valueDisplay = new ValueDisplay(map);
@@ -61,6 +75,11 @@ public class NumberTopHolder extends SimpleDataHolder<UUID, Double> implements A
                 .map(String::toLowerCase)
                 .map(Boolean::parseBoolean)
                 .orElse(false);
+        boolean resetOnError = Optional.ofNullable(map.get("reset-on-error"))
+                .map(Object::toString)
+                .map(String::toLowerCase)
+                .map(Boolean::parseBoolean)
+                .orElse(true);
         List<String> ignorePermissions = CollectionUtils.createStringListFromObject(map.get("ignore-permission"), true);
         List<String> resetPermissions = CollectionUtils.createStringListFromObject(map.get("reset-permission"), true);
         this.updateAgent = new UpdateAgent<>(this, valueProvider);
@@ -79,7 +98,14 @@ public class NumberTopHolder extends SimpleDataHolder<UUID, Double> implements A
                 return UpdateAgent.FilterResult.CONTINUE;
             });
         }
-        if (showErrors) {
+        if (resetOnError) {
+            updateAgent.setErrorHandler((uuid, valueWrapper) -> {
+                if (showErrors && valueWrapper.state == ValueWrapper.State.ERROR) {
+                    instance.getLogger().log(Level.WARNING, "Error on getting value for " + name + " from " + uuid + " - " + valueWrapper.errorMessage, valueWrapper.throwable);
+                }
+                return ValueWrapper.handled(defaultValue);
+            });
+        } else if (showErrors) {
             updateAgent.setErrorHandler((uuid, valueWrapper) -> {
                 if (valueWrapper.state == ValueWrapper.State.ERROR) {
                     instance.getLogger().log(Level.WARNING, "Error on getting value for " + name + " from " + uuid + " - " + valueWrapper.errorMessage, valueWrapper.throwable);
@@ -122,6 +148,11 @@ public class NumberTopHolder extends SimpleDataHolder<UUID, Double> implements A
                 ));
             }
         });
+    }
+
+    @Override
+    public @Nullable Double getDefaultValue() {
+        return defaultValue;
     }
 
     @Override
