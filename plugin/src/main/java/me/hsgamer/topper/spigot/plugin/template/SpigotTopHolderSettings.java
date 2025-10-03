@@ -2,6 +2,7 @@ package me.hsgamer.topper.spigot.plugin.template;
 
 import me.hsgamer.hscore.common.CollectionUtils;
 import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
+import me.hsgamer.topper.template.topplayernumber.holder.display.ValueDisplay;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -11,9 +12,11 @@ import java.util.logging.Level;
 
 public class SpigotTopHolderSettings implements NumberTopHolder.Settings {
     private final Map<String, Object> map;
+    private final SpigotValueDisplaySettings valueDisplaySettings;
 
     public SpigotTopHolderSettings(Map<String, Object> map) {
         this.map = map;
+        this.valueDisplaySettings = new SpigotValueDisplaySettings(map);
     }
 
     @Override
@@ -32,31 +35,8 @@ public class SpigotTopHolderSettings implements NumberTopHolder.Settings {
     }
 
     @Override
-    public String defaultLine() {
-        return Optional.ofNullable(map.get("line"))
-                .map(Object::toString)
-                .orElse("&7[&b{index}&7] &b{name} &7- &b{value}");
-    }
-
-    @Override
-    public String displayNullName() {
-        return Optional.ofNullable(map.get("null-name"))
-                .map(Object::toString)
-                .orElse("---");
-    }
-
-    @Override
-    public String displayNullUuid() {
-        return Optional.ofNullable(map.get("null-uuid"))
-                .map(Object::toString)
-                .orElse("---");
-    }
-
-    @Override
-    public String displayNullValue() {
-        return Optional.ofNullable(map.get("null-value"))
-                .map(Object::toString)
-                .orElse("---");
+    public ValueDisplay.Settings displaySettings() {
+        return valueDisplaySettings;
     }
 
     @Override

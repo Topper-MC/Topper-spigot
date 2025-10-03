@@ -1,26 +1,30 @@
 package me.hsgamer.topper.spigot.plugin.template;
 
-import me.hsgamer.hscore.bukkit.config.BukkitConfig;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
-import me.hsgamer.topper.storage.sql.config.SqlDatabaseConfig;
-import me.hsgamer.topper.storage.sql.core.SqlDatabaseSetting;
 import me.hsgamer.topper.template.topplayernumber.TopPlayerNumberTemplate;
 import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
+import me.hsgamer.topper.template.topplayernumber.storage.DataStorageSupplier;
 
-import java.io.File;
 import java.util.Map;
 
 public class SpigotTopTemplateSettings implements TopPlayerNumberTemplate.Settings {
     private final TopperPlugin plugin;
+    private final SpigotDataStorageSupplierSettings dataStorageSupplierSettings;
 
     public SpigotTopTemplateSettings(TopperPlugin plugin) {
         this.plugin = plugin;
+        this.dataStorageSupplierSettings = new SpigotDataStorageSupplierSettings(plugin);
     }
 
     @Override
     public String storageType() {
         return plugin.get(MainConfig.class).getStorageType();
+    }
+
+    @Override
+    public DataStorageSupplier.Settings storageSettings() {
+        return dataStorageSupplierSettings;
     }
 
     @Override
@@ -56,15 +60,5 @@ public class SpigotTopTemplateSettings implements TopPlayerNumberTemplate.Settin
     @Override
     public int taskUpdateMaxSkips() {
         return plugin.get(MainConfig.class).getTaskUpdateMaxSkips();
-    }
-
-    @Override
-    public SqlDatabaseSetting databaseSetting() {
-        return new SqlDatabaseConfig("topper", new BukkitConfig(plugin, "database.yml"));
-    }
-
-    @Override
-    public File baseFolder() {
-        return new File(plugin.getDataFolder(), "top");
     }
 }
