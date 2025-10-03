@@ -4,9 +4,9 @@ import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.topper.spigot.plugin.Permissions;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
-import me.hsgamer.topper.spigot.plugin.holder.NumberTopHolder;
-import me.hsgamer.topper.spigot.plugin.holder.display.ValueDisplay;
-import me.hsgamer.topper.spigot.plugin.manager.TopManager;
+import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
+import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
+import me.hsgamer.topper.template.topplayernumber.holder.display.ValueDisplay;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -37,7 +37,7 @@ public class GetTopListCommand extends Command {
             sendMessage(sender, "&c" + getUsage());
             return false;
         }
-        Optional<NumberTopHolder> optional = instance.get(TopManager.class).getTopHolder(args[0]);
+        Optional<NumberTopHolder> optional = instance.get(SpigotTopTemplate.class).getTopManager().getHolder(args[0]);
         if (!optional.isPresent()) {
             MessageUtils.sendMessage(sender, instance.get(MessageConfig.class).getTopHolderNotFound());
             return false;
@@ -80,7 +80,7 @@ public class GetTopListCommand extends Command {
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
         if (args.length == 1) {
-            return instance.get(TopManager.class).getTopHolderNames().stream()
+            return instance.get(SpigotTopTemplate.class).getTopManager().getHolderNames().stream()
                     .filter(name -> args[0].isEmpty() || name.toLowerCase().startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         } else if (args.length == 2 || args.length == 3) {

@@ -3,19 +3,20 @@ package me.hsgamer.topper.spigot.plugin.config;
 import me.hsgamer.hscore.config.Config;
 import me.hsgamer.hscore.config.annotation.Comment;
 import me.hsgamer.hscore.config.annotation.ConfigPath;
-import me.hsgamer.topper.spigot.plugin.config.converter.StringStringObjectMapConverter;
+import me.hsgamer.topper.spigot.plugin.config.converter.HolderMapConverter;
+import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
 
 import java.util.Collections;
 import java.util.Map;
 
 public interface MainConfig {
-    @ConfigPath(value = "holders", converter = StringStringObjectMapConverter.class, priority = 1)
+    @ConfigPath(value = "holders", converter = HolderMapConverter.class, priority = 1)
     @Comment({
             "The settings for the Top Holders",
             "Check the wiki for more information on how to setup Top Holder using Value Provider",
             "https://topper-mc.github.io/Wiki/spigot/provider.html"
     })
-    default Map<String, Map<String, Object>> getHolders() {
+    default Map<String, NumberTopHolder.Settings> getHolders() {
         return Collections.emptyMap();
     }
 

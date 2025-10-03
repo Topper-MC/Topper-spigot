@@ -87,48 +87,13 @@
     <dependencies>
         <dependency>
             <groupId>me.hsgamer</groupId>
-            <artifactId>topper-data-simple</artifactId>
-            <version>${topper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>topper-agent-core</artifactId>
-            <version>${topper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>topper-agent-update</artifactId>
-            <version>${topper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>topper-agent-snapshot</artifactId>
-            <version>${topper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>topper-agent-storage</artifactId>
+            <artifactId>topper-template-top-player-number</artifactId>
             <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-spigot-agent-runnable</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>topper-query-display-number</artifactId>
-            <version>${topper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>topper-query-holder</artifactId>
-            <version>${topper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>topper-query-snapshot</artifactId>
-            <version>${topper.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
@@ -180,11 +145,6 @@
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-storage-sql-config</artifactId>
-            <version>${topper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>topper-value-string</artifactId>
             <version>${topper.version}</version>
         </dependency>
         <dependency>

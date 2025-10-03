@@ -11,15 +11,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class MiniPlaceholdersQueryForwarder<C extends QueryForwardContext<Player>> implements Consumer<C> {
+public class MiniPlaceholdersQueryForwarder<C extends QueryForwardContext<UUID>> implements Consumer<C> {
     private final List<Expansion> expansions = new ArrayList<>();
 
     @Override
     public void accept(C queryContext) {
-        BiFunction<@Nullable Player, ArgumentQueue, Tag> queryFunction = (player, queue) -> {
+        BiFunction<@Nullable UUID, ArgumentQueue, Tag> queryFunction = (uuid, queue) -> {
             if (!queue.hasNext()) {
                 return Tag.selfClosingInserting(Component.text("You need to specify the query"));
             }
@@ -30,7 +31,7 @@ public class MiniPlaceholdersQueryForwarder<C extends QueryForwardContext<Player
             }
 
             String query = String.join(":", args);
-            String result = queryContext.getQuery().apply(player, query).result;
+            String result = queryContext.getQuery().apply(uuid, query).result;
             if (result == null) {
                 return TagsUtils.EMPTY_TAG;
             } else {
@@ -41,7 +42,7 @@ public class MiniPlaceholdersQueryForwarder<C extends QueryForwardContext<Player
         Expansion expansion = Expansion.builder("topper")
                 .globalPlaceholder("global", (queue, context) -> queryFunction.apply(null, queue))
                 .filter(Player.class)
-                .audiencePlaceholder("player", (audience, queue, ctx) -> queryFunction.apply((Player) audience, queue))
+                .audiencePlaceholder("player", (audience, queue, ctx) -> queryFunction.apply(((Player) audience).getUniqueId(), queue))
                 .build();
 
         expansion.register();

@@ -11,16 +11,16 @@ import me.hsgamer.topper.spigot.query.forward.miniplaceholders.MiniPlaceholdersQ
 import me.hsgamer.topper.spigot.value.miniplaceholders.MiniPlaceholderValueProvider;
 import me.hsgamer.topper.value.string.StringDeformatters;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.BiFunction;
 
 public class MiniPlaceholdersHook implements Loadable {
     private final TopperPlugin plugin;
-    private final MiniPlaceholdersQueryForwarder<QueryForwardContext<Player>> queryForwarder = new MiniPlaceholdersQueryForwarder<>();
+    private final MiniPlaceholdersQueryForwarder<QueryForwardContext<UUID>> queryForwarder = new MiniPlaceholdersQueryForwarder<>();
 
     public MiniPlaceholdersHook(TopperPlugin plugin) {
         this.plugin = plugin;
@@ -35,15 +35,15 @@ public class MiniPlaceholdersHook implements Loadable {
                     .thenApply(ParseUtil::parsePlaceholderNumber)
                     .beforeApply(Bukkit::getPlayer);
         }, "miniplaceholders", "miniplaceholder", "mini-placeholders", "mini-placeholder");
-        plugin.get(QueryForwardManager.class).addForwarder(context -> queryForwarder.accept(new QueryForwardContext<Player>() {
+        plugin.get(QueryForwardManager.class).addForwarder(context -> queryForwarder.accept(new QueryForwardContext<UUID>() {
             @Override
             public String getName() {
                 return context.getName();
             }
 
             @Override
-            public BiFunction<@Nullable Player, @NotNull String, @NotNull QueryResult> getQuery() {
-                return context.getQuery()::apply;
+            public BiFunction<@Nullable UUID, @NotNull String, @NotNull QueryResult> getQuery() {
+                return context.getQuery();
             }
         }));
     }

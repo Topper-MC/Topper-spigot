@@ -8,9 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
-public class PlaceholderQueryForwarder<C extends QueryForwardContext<OfflinePlayer> & PluginContext> implements Consumer<C> {
+public class PlaceholderQueryForwarder<C extends QueryForwardContext<UUID> & PluginContext> implements Consumer<C> {
     private final List<PlaceholderExpansion> expansions = new ArrayList<>();
 
     @Override
@@ -38,7 +39,7 @@ public class PlaceholderQueryForwarder<C extends QueryForwardContext<OfflinePlay
 
             @Override
             public String onRequest(OfflinePlayer player, @NotNull String params) {
-                return context.getQuery().apply(player, params).result;
+                return context.getQuery().apply(player != null ? player.getUniqueId() : null, params).result;
             }
         };
         expansion.register();
