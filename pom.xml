@@ -116,7 +116,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-20180712.012057-156</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -154,7 +154,7 @@
                         <configuration>
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
-                            <deploymentName>Topper</deploymentName>
+                            <deploymentName>Topper-spigot</deploymentName>
                         </configuration>
                     </plugin>
                 </plugins>
