@@ -1,7 +1,7 @@
 package me.hsgamer.topper.spigot.query.forward.miniplaceholders;
 
 import io.github.miniplaceholders.api.Expansion;
-import io.github.miniplaceholders.api.utils.TagsUtils;
+import io.github.miniplaceholders.api.utils.Tags;
 import me.hsgamer.topper.query.forward.QueryForwardContext;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.Tag;
@@ -33,7 +33,7 @@ public class MiniPlaceholdersQueryForwarder<C extends QueryForwardContext<UUID>>
             String query = String.join(":", args);
             String result = queryContext.getQuery().apply(uuid, query).result;
             if (result == null) {
-                return TagsUtils.EMPTY_TAG;
+                return Tags.EMPTY_TAG;
             } else {
                 return Tag.selfClosingInserting(Component.text(result));
             }
@@ -41,8 +41,7 @@ public class MiniPlaceholdersQueryForwarder<C extends QueryForwardContext<UUID>>
 
         Expansion expansion = Expansion.builder("topper")
                 .globalPlaceholder("global", (queue, context) -> queryFunction.apply(null, queue))
-                .filter(Player.class)
-                .audiencePlaceholder("player", (audience, queue, ctx) -> queryFunction.apply(((Player) audience).getUniqueId(), queue))
+                .audiencePlaceholder(Player.class, "player", (audience, queue, ctx) -> queryFunction.apply(audience.getUniqueId(), queue))
                 .build();
 
         expansion.register();
