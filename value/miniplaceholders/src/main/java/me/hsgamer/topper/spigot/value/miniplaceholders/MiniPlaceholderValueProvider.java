@@ -16,6 +16,12 @@ public class MiniPlaceholderValueProvider implements ValueProvider<Player, Strin
         this.placeholder = placeholder;
     }
 
+    private static String normalizePlaceholder(String placeholder) {
+        return placeholder.isEmpty() || placeholder.startsWith("<") || placeholder.endsWith(">")
+                ? placeholder
+                : "<" + placeholder + ">";
+    }
+
     @Override
     public @NotNull ValueWrapper<String> apply(@NotNull Player key) {
         String parsed;

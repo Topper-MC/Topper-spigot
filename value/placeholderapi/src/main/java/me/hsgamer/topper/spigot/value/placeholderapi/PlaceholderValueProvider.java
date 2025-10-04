@@ -11,8 +11,14 @@ public class PlaceholderValueProvider implements ValueProvider<OfflinePlayer, St
     private final boolean isOnlineOnly;
 
     public PlaceholderValueProvider(String placeholder, boolean isOnlineOnly) {
-        this.placeholder = placeholder;
+        this.placeholder = normalizePlaceholder(placeholder);
         this.isOnlineOnly = isOnlineOnly;
+    }
+
+    private static String normalizePlaceholder(String placeholder) {
+        return placeholder.isEmpty() || placeholder.startsWith("%") || placeholder.endsWith("%")
+                ? placeholder
+                : "%" + placeholder + "%";
     }
 
     @Override
