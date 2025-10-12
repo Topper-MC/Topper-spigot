@@ -14,7 +14,7 @@ public class MiniPlaceholderValueProvider implements ValueProvider<Player, Strin
     private final String placeholder;
 
     public MiniPlaceholderValueProvider(String placeholder) {
-        this.placeholder = placeholder;
+        this.placeholder = normalizePlaceholder(placeholder);
     }
 
     private static String normalizePlaceholder(String placeholder) {

@@ -39,7 +39,7 @@ public class MiniPlaceholdersQueryForwarder<C extends QueryForwardContext<UUID>>
             }
         };
 
-        Expansion expansion = Expansion.builder("topper")
+        Expansion expansion = Expansion.builder(queryContext.getName())
                 .globalPlaceholder("global", (queue, context) -> queryFunction.apply(null, queue))
                 .audiencePlaceholder(Player.class, "player", (audience, queue, ctx) -> queryFunction.apply(audience.getUniqueId(), queue))
                 .build();
