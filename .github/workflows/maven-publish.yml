@@ -43,3 +43,26 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/reports/apidocs
+      - name: Release
+        uses: HSGamer/action-mcreleaser@main
+        with:
+          files: |
+            target/topper-spigot-plugin-*-shaded.jar
+            target/topper-spigot-plugin-*-@(sources|javadoc).jar
+        env:
+          DESCRIPTION: ${{ steps.changelog.outputs.changelog }}
+          GAME_VERSIONS: "1.8..latest"
+
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_PROJECT: 6zYtBRSV
+          MODRINTH_LOADERS: |
+            bukkit
+            spigot
+            paper
+            purpur
+            folia
+
+          POLYMART_KEY: ${{ secrets.POLYMART_KEY }}
+          POLYMART_RESOURCE: 7111
