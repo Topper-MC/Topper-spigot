@@ -4,27 +4,14 @@ import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.template.topplayernumber.TopPlayerNumberTemplate;
 import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
-import me.hsgamer.topper.template.topplayernumber.storage.DataStorageSupplier;
 
 import java.util.Map;
 
 public class SpigotTopTemplateSettings implements TopPlayerNumberTemplate.Settings {
     private final TopperPlugin plugin;
-    private final SpigotDataStorageSupplierSettings dataStorageSupplierSettings;
 
     public SpigotTopTemplateSettings(TopperPlugin plugin) {
         this.plugin = plugin;
-        this.dataStorageSupplierSettings = new SpigotDataStorageSupplierSettings(plugin);
-    }
-
-    @Override
-    public String storageType() {
-        return plugin.get(MainConfig.class).getStorageType();
-    }
-
-    @Override
-    public DataStorageSupplier.Settings storageSettings() {
-        return dataStorageSupplierSettings;
     }
 
     @Override

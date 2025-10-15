@@ -9,11 +9,10 @@ import me.hsgamer.topper.spigot.agent.runnable.SpigotRunnableAgent;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.event.GenericEntryUpdateEvent;
-import me.hsgamer.topper.spigot.plugin.manager.StorageManager;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
+import me.hsgamer.topper.storage.core.DataStorage;
 import me.hsgamer.topper.template.topplayernumber.TopPlayerNumberTemplate;
 import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
-import me.hsgamer.topper.template.topplayernumber.storage.DataStorageSupplier;
 import me.hsgamer.topper.value.core.ValueProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -24,19 +23,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.logging.Level;
 
 public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadable {
     private final TopperPlugin plugin;
 
-    public SpigotTopTemplate(TopperPlugin plugin, Settings settings) {
-        super(settings);
+    public SpigotTopTemplate(TopperPlugin plugin) {
+        super(new SpigotTopTemplateSettings(plugin));
         this.plugin = plugin;
     }
 
     @Override
-    public DataStorageSupplier getDataStorageSupplier(String type, DataStorageSupplier.Settings setting) {
-        return plugin.get(StorageManager.class).getSupplier(type, setting);
+    public Function<String, DataStorage<UUID, Double>> getStorageSupplier() {
+        return plugin.get(SpigotStorageSupplierTemplate.class).getNumberStorageSupplier();
     }
 
     @Override

@@ -12,11 +12,9 @@ import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
 import me.hsgamer.topper.spigot.plugin.hook.HookSystem;
 import me.hsgamer.topper.spigot.plugin.listener.JoinListener;
-import me.hsgamer.topper.spigot.plugin.manager.QueryForwardManager;
-import me.hsgamer.topper.spigot.plugin.manager.StorageManager;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
+import me.hsgamer.topper.spigot.plugin.template.SpigotStorageSupplierTemplate;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
-import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplateSettings;
 import org.bstats.bukkit.Metrics;
 
 import java.util.Arrays;
@@ -33,12 +31,11 @@ public class TopperPlugin extends BasePlugin {
                 ConfigGenerator.newInstance(MessageConfig.class, new BukkitConfig(this, "messages.yml")),
 
                 new ValueProviderManager(),
-                new StorageManager(),
 
                 new HookSystem(this),
 
-                new SpigotTopTemplate(this, new SpigotTopTemplateSettings(this)),
-                new QueryForwardManager(this),
+                new SpigotStorageSupplierTemplate(this),
+                new SpigotTopTemplate(this),
 
                 new Permissions(this),
                 new CommandComponent(this,

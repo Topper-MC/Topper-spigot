@@ -1,9 +1,10 @@
 package me.hsgamer.topper.spigot.plugin.hook.placeholderapi;
 
 import io.github.projectunified.minelib.plugin.base.Loadable;
+import me.hsgamer.topper.query.forward.QueryForwardContext;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
-import me.hsgamer.topper.spigot.plugin.manager.QueryForwardManager;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
+import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import me.hsgamer.topper.spigot.plugin.util.ParseUtil;
 import me.hsgamer.topper.spigot.query.forward.placeholderapi.PlaceholderQueryForwarder;
 import me.hsgamer.topper.spigot.value.placeholderapi.PlaceholderValueProvider;
@@ -11,13 +12,15 @@ import me.hsgamer.topper.value.string.StringDeformatters;
 import org.bukkit.Bukkit;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class PlaceholderAPIHook implements Loadable {
     private final TopperPlugin plugin;
-    private final PlaceholderQueryForwarder<QueryForwardManager.ForwardContext> queryForwarder = new PlaceholderQueryForwarder<>();
+    private final PlaceholderQueryForwarder<QueryForwardContext<UUID>> queryForwarder;
 
     public PlaceholderAPIHook(TopperPlugin plugin) {
         this.plugin = plugin;
+        this.queryForwarder = new PlaceholderQueryForwarder<>(plugin);
     }
 
     @Override
@@ -34,7 +37,7 @@ public class PlaceholderAPIHook implements Loadable {
                     .thenApply(ParseUtil::parsePlaceholderNumber)
                     .beforeApply(Bukkit::getOfflinePlayer);
         }, "placeholderapi", "placeholder", "papi");
-        plugin.get(QueryForwardManager.class).addForwarder(queryForwarder);
+        plugin.get(SpigotTopTemplate.class).getQueryForwardManager().addForwarder(queryForwarder);
     }
 
     @Override

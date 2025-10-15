@@ -4,6 +4,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.hsgamer.topper.query.forward.QueryForwardContext;
 import me.hsgamer.topper.spigot.query.forward.plugin.PluginContext;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -11,11 +12,17 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class PlaceholderQueryForwarder<C extends QueryForwardContext<UUID> & PluginContext> implements Consumer<C> {
+public class PlaceholderQueryForwarder<C extends QueryForwardContext<UUID>> implements Consumer<C> {
     private final List<PlaceholderExpansion> expansions = new ArrayList<>();
+    private final Plugin defaultPlugin;
+
+    public PlaceholderQueryForwarder(Plugin defaultPlugin) {
+        this.defaultPlugin = defaultPlugin;
+    }
 
     @Override
     public void accept(C context) {
+        Plugin plugin = context instanceof PluginContext ? ((PluginContext) context).getPlugin() : defaultPlugin;
         PlaceholderExpansion expansion = new PlaceholderExpansion() {
             @Override
             public @NotNull String getIdentifier() {
@@ -24,12 +31,12 @@ public class PlaceholderQueryForwarder<C extends QueryForwardContext<UUID> & Plu
 
             @Override
             public @NotNull String getAuthor() {
-                return String.join(", ", context.getPlugin().getDescription().getAuthors());
+                return String.join(", ", plugin.getDescription().getAuthors());
             }
 
             @Override
             public @NotNull String getVersion() {
-                return context.getPlugin().getDescription().getVersion();
+                return plugin.getDescription().getVersion();
             }
 
             @Override

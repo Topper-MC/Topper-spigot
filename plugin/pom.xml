@@ -102,6 +102,11 @@
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
+            <artifactId>topper-template-storage-supplier</artifactId>
+            <version>${topper.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.hsgamer</groupId>
             <artifactId>topper-storage-flat-properties</artifactId>
             <version>${topper.version}</version>
         </dependency>

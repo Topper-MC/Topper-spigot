@@ -4,8 +4,8 @@ import io.github.projectunified.minelib.plugin.base.Loadable;
 import me.hsgamer.topper.query.core.QueryResult;
 import me.hsgamer.topper.query.forward.QueryForwardContext;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
-import me.hsgamer.topper.spigot.plugin.manager.QueryForwardManager;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
+import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import me.hsgamer.topper.spigot.plugin.util.ParseUtil;
 import me.hsgamer.topper.spigot.query.forward.miniplaceholders.MiniPlaceholdersQueryForwarder;
 import me.hsgamer.topper.spigot.value.miniplaceholders.MiniPlaceholderValueProvider;
@@ -35,7 +35,7 @@ public class MiniPlaceholdersHook implements Loadable {
                     .thenApply(ParseUtil::parsePlaceholderNumber)
                     .beforeApply(Bukkit::getPlayer);
         }, "miniplaceholders", "miniplaceholder", "mini-placeholders", "mini-placeholder");
-        plugin.get(QueryForwardManager.class).addForwarder(context -> queryForwarder.accept(new QueryForwardContext<UUID>() {
+        plugin.get(SpigotTopTemplate.class).getQueryForwardManager().addForwarder(context -> queryForwarder.accept(new QueryForwardContext<UUID>() {
             @Override
             public String getName() {
                 return context.getName();

@@ -1,30 +1,39 @@
-package me.hsgamer.topper.spigot.plugin.manager;
+package me.hsgamer.topper.spigot.plugin.template;
 
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
 import me.hsgamer.hscore.config.Config;
 import me.hsgamer.hscore.config.gson.GsonConfig;
 import me.hsgamer.hscore.database.client.sql.java.JavaSqlClient;
+import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.storage.core.DataStorage;
 import me.hsgamer.topper.storage.flat.configfile.ConfigFileDataStorage;
+import me.hsgamer.topper.storage.flat.converter.NumberFlatValueConverter;
+import me.hsgamer.topper.storage.flat.converter.UUIDFlatValueConverter;
 import me.hsgamer.topper.storage.flat.core.FlatValueConverter;
 import me.hsgamer.topper.storage.flat.properties.PropertiesDataStorage;
+import me.hsgamer.topper.storage.sql.converter.NumberSqlValueConverter;
+import me.hsgamer.topper.storage.sql.converter.UUIDSqlValueConverter;
 import me.hsgamer.topper.storage.sql.core.SqlValueConverter;
 import me.hsgamer.topper.storage.sql.mysql.MySqlDataStorageSupplier;
 import me.hsgamer.topper.storage.sql.sqlite.NewSqliteDataStorageSupplier;
 import me.hsgamer.topper.storage.sql.sqlite.SqliteDataStorageSupplier;
-import me.hsgamer.topper.template.topplayernumber.storage.DataStorageSupplier;
+import me.hsgamer.topper.template.storagesupplier.StorageSupplierTemplate;
+import me.hsgamer.topper.template.storagesupplier.storage.DataStorageSupplier;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
-public class StorageManager {
-    private final Map<String, Function<DataStorageSupplier.Settings, DataStorageSupplier>> supplierMap;
-    private final Function<DataStorageSupplier.Settings, DataStorageSupplier> defaultSupplier;
+public class SpigotStorageSupplierTemplate implements StorageSupplierTemplate {
+    private final SpigotDataStorageSupplierSettings dataStorageSupplierSettings;
+    private final Map<String, Function<Settings, DataStorageSupplier>> supplierMap;
+    private final Function<Settings, DataStorageSupplier> defaultSupplier;
 
-    public StorageManager() {
+    public SpigotStorageSupplierTemplate(TopperPlugin plugin) {
+        this.dataStorageSupplierSettings = new SpigotDataStorageSupplierSettings(plugin);
         this.supplierMap = new HashMap<>();
         this.defaultSupplier = setting -> new DataStorageSupplier() {
             @Override
@@ -94,7 +103,17 @@ public class StorageManager {
         });
     }
 
-    public DataStorageSupplier getSupplier(String type, DataStorageSupplier.Settings setting) {
-        return supplierMap.getOrDefault(type.toLowerCase(Locale.ROOT), defaultSupplier).apply(setting);
+    @Override
+    public DataStorageSupplier getDataStorageSupplier(Settings settings) {
+        return supplierMap.getOrDefault(settings.storageType().toLowerCase(Locale.ROOT), defaultSupplier).apply(settings);
+    }
+
+    public Function<String, DataStorage<UUID, Double>> getNumberStorageSupplier() {
+        return getDataStorageSupplier(dataStorageSupplierSettings).getStorageSupplier(
+                new UUIDFlatValueConverter(),
+                new NumberFlatValueConverter<>(Number::doubleValue),
+                new UUIDSqlValueConverter("uuid"),
+                new NumberSqlValueConverter<>("value", true, Number::doubleValue)
+        );
     }
 }
