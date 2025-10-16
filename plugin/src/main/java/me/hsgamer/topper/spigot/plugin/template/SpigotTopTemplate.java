@@ -5,11 +5,14 @@ import io.github.projectunified.minelib.scheduler.async.AsyncScheduler;
 import io.github.projectunified.minelib.scheduler.global.GlobalScheduler;
 import me.hsgamer.topper.agent.core.Agent;
 import me.hsgamer.topper.agent.core.DataEntryAgent;
+import me.hsgamer.topper.query.core.QueryResult;
+import me.hsgamer.topper.query.forward.QueryForwardContext;
 import me.hsgamer.topper.spigot.agent.runnable.SpigotRunnableAgent;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.event.GenericEntryUpdateEvent;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
+import me.hsgamer.topper.spigot.query.forward.plugin.PluginContext;
 import me.hsgamer.topper.storage.core.DataStorage;
 import me.hsgamer.topper.template.topplayernumber.TopPlayerNumberTemplate;
 import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
@@ -17,12 +20,15 @@ import me.hsgamer.topper.value.core.ValueProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.logging.Level;
 
@@ -100,5 +106,27 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
                 context.value,
                 true
         )));
+    }
+
+    public void addQueryForwardContext(Plugin plugin, String name, BiFunction<@Nullable UUID, @NotNull String, @NotNull QueryResult> query) {
+        getQueryForwardManager().addContext(new PluginTopQueryForwardContext() {
+            @Override
+            public String getName() {
+                return name;
+            }
+
+            @Override
+            public BiFunction<@Nullable UUID, @NotNull String, @NotNull QueryResult> getQuery() {
+                return query;
+            }
+
+            @Override
+            public Plugin getPlugin() {
+                return plugin;
+            }
+        });
+    }
+
+    private interface PluginTopQueryForwardContext extends QueryForwardContext<UUID>, PluginContext {
     }
 }
