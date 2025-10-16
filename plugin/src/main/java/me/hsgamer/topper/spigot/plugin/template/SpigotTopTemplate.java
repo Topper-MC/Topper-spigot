@@ -98,14 +98,21 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
     @Override
     public void enable() {
         super.enable();
-        getEntryConsumeManager().addConsumer((context) -> Bukkit.getPluginManager().callEvent(new GenericEntryUpdateEvent(
-                context.group,
-                context.holder,
-                context.uuid,
-                context.oldValue,
-                context.value,
-                true
-        )));
+        getEntryConsumeManager().addConsumer(
+                (context) ->
+                        AsyncScheduler.get(plugin).run(
+                                () ->
+                                        Bukkit.getPluginManager().callEvent(new GenericEntryUpdateEvent(
+                                                        context.group,
+                                                        context.holder,
+                                                        context.uuid,
+                                                        context.oldValue,
+                                                        context.value,
+                                                        true
+                                                )
+                                        )
+                        )
+        );
     }
 
     public void addQueryForwardContext(Plugin plugin, String name, BiFunction<@Nullable UUID, @NotNull String, @NotNull QueryResult> query) {
