@@ -18,6 +18,15 @@ jobs:
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check commit message
+        id: commit_check
+        run: |
+          if git log -1 --pretty=%B | grep -q "\[skip-central\]"; then
+            echo "skip_central=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip_central=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
@@ -28,11 +37,19 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
 
-      - name: Build with Maven
+      - name: Build with Maven (Deploy to Central)
+        if: steps.commit_check.outputs.skip_central == 'false'
         run: mvn clean deploy -P central -Dgpg.signer=bc
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_GPG_KEY: ${{ secrets.GPG_SECRET_KEY }}
+
+      - name: Build with Maven (Skip Central)
+        if: steps.commit_check.outputs.skip_central == 'true'
+        run: mvn clean package
+        env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           MAVEN_GPG_KEY: ${{ secrets.GPG_SECRET_KEY }}
 
