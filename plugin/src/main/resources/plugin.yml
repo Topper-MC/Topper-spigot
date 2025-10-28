@@ -5,4 +5,5 @@ api-version: 1.13
 softdepend:
   - PlaceholderAPI
   - MiniPlaceholders
+  - LuckPerms
 folia-supported: true
