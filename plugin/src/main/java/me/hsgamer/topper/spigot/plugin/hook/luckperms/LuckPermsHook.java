@@ -2,12 +2,10 @@ package me.hsgamer.topper.spigot.plugin.hook.luckperms;
 
 import io.github.projectunified.minelib.plugin.base.Loadable;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
-import me.hsgamer.topper.spigot.plugin.manager.NameProviderManager;
+import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
-
-import java.util.Optional;
 
 public class LuckPermsHook implements Loadable {
     private final TopperPlugin instance;
@@ -23,7 +21,13 @@ public class LuckPermsHook implements Loadable {
         TopContextCalculator contextCalculator = new TopContextCalculator(instance);
         api.getContextManager().registerCalculator(contextCalculator);
 
-        Runnable unregisterNameProvider = instance.get(NameProviderManager.class).addNameProvider(uuid -> Optional.ofNullable(api.getUserManager().getUser(uuid)).map(User::getUsername));
+        Runnable unregisterNameProvider = instance.get(SpigotTopTemplate.class).getNameProviderManager().addNameProvider(uuid -> {
+            User user = api.getUserManager().getUser(uuid);
+            if (user == null) {
+                return null;
+            }
+            return user.getUsername();
+        });
 
         disableRunnable = () -> {
             api.getContextManager().unregisterCalculator(contextCalculator);

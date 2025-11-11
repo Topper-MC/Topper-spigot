@@ -11,7 +11,6 @@ import me.hsgamer.topper.spigot.agent.runnable.SpigotRunnableAgent;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.event.GenericEntryUpdateEvent;
-import me.hsgamer.topper.spigot.plugin.manager.NameProviderManager;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.query.forward.plugin.PluginContext;
 import me.hsgamer.topper.storage.core.DataStorage;
@@ -48,11 +47,6 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
     @Override
     public Optional<ValueProvider<UUID, Double>> createValueProvider(Map<String, Object> settings) {
         return plugin.get(ValueProviderManager.class).build(settings);
-    }
-
-    @Override
-    public String getName(UUID uuid) {
-        return plugin.get(NameProviderManager.class).getName(uuid);
     }
 
     @Override

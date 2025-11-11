@@ -12,19 +12,17 @@ import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
 import me.hsgamer.topper.spigot.plugin.hook.HookSystem;
 import me.hsgamer.topper.spigot.plugin.listener.JoinListener;
-import me.hsgamer.topper.spigot.plugin.manager.NameProviderManager;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.plugin.template.SpigotStorageSupplierTemplate;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
 public class TopperPlugin extends BasePlugin {
-    public static final String GROUP = "topper";
-
     @Override
     protected List<Object> getComponents() {
         return Arrays.asList(
@@ -32,7 +30,6 @@ public class TopperPlugin extends BasePlugin {
                 ConfigGenerator.newInstance(MessageConfig.class, new BukkitConfig(this, "messages.yml")),
 
                 new ValueProviderManager(),
-                new NameProviderManager(),
 
                 new HookSystem(this),
 
@@ -51,6 +48,7 @@ public class TopperPlugin extends BasePlugin {
     @Override
     public void load() {
         MessageUtils.setPrefix(get(MessageConfig.class)::getPrefix);
+        get(SpigotTopTemplate.class).getNameProviderManager().setDefaultNameProvider(uuid -> Bukkit.getOfflinePlayer(uuid).getName());
     }
 
     @Override

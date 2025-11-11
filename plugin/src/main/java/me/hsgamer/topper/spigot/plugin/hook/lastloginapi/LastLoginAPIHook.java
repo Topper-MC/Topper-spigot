@@ -4,9 +4,8 @@ import com.alessiodp.lastloginapi.api.interfaces.LastLoginAPI;
 import com.alessiodp.lastloginapi.api.interfaces.LastLoginPlayer;
 import io.github.projectunified.minelib.plugin.base.Loadable;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
-import me.hsgamer.topper.spigot.plugin.manager.NameProviderManager;
+import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.alessiodp.lastloginapi.api.LastLogin.getApi;
@@ -21,7 +20,7 @@ public class LastLoginAPIHook implements Loadable {
 
     @Override
     public void enable() {
-        disableRunnable = plugin.get(NameProviderManager.class).addNameProvider(this::getName);
+        disableRunnable = plugin.get(SpigotTopTemplate.class).getNameProviderManager().addNameProvider(this::getName);
     }
 
     @Override
@@ -31,9 +30,10 @@ public class LastLoginAPIHook implements Loadable {
         }
     }
 
-    private Optional<String> getName(UUID uuid) {
+    private String getName(UUID uuid) {
         LastLoginAPI api = getApi();
         LastLoginPlayer player = api.getPlayer(uuid);
-        return Optional.of(player.getName()).filter(name -> !name.isEmpty());
+        String name = player.getName();
+        return name.isEmpty() ? null : name;
     }
 }
