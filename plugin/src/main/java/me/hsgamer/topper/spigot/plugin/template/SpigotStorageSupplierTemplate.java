@@ -13,12 +13,13 @@ import me.hsgamer.topper.storage.flat.core.FlatValueConverter;
 import me.hsgamer.topper.storage.flat.properties.PropertiesDataStorage;
 import me.hsgamer.topper.storage.sql.converter.NumberSqlValueConverter;
 import me.hsgamer.topper.storage.sql.converter.UUIDSqlValueConverter;
-import me.hsgamer.topper.storage.sql.core.SqlValueConverter;
 import me.hsgamer.topper.storage.sql.mysql.MySqlDataStorageSupplier;
 import me.hsgamer.topper.storage.sql.sqlite.NewSqliteDataStorageSupplier;
 import me.hsgamer.topper.storage.sql.sqlite.SqliteDataStorageSupplier;
 import me.hsgamer.topper.template.storagesupplier.StorageSupplierTemplate;
 import me.hsgamer.topper.template.storagesupplier.storage.DataStorageSupplier;
+import me.hsgamer.topper.template.storagesupplier.storage.FlatDataStorageSupplier;
+import me.hsgamer.topper.template.storagesupplier.storage.SqlDataStorageSupplier;
 
 import java.io.File;
 import java.util.HashMap;
@@ -35,16 +36,16 @@ public class SpigotStorageSupplierTemplate implements StorageSupplierTemplate {
     public SpigotStorageSupplierTemplate(TopperPlugin plugin) {
         this.dataStorageSupplierSettings = new SpigotDataStorageSupplierSettings(plugin);
         this.supplierMap = new HashMap<>();
-        this.defaultSupplier = setting -> new DataStorageSupplier() {
+        this.defaultSupplier = setting -> new FlatDataStorageSupplier() {
             @Override
-            public <K, V> DataStorage<K, V> getStorage(String name, FlatValueConverter<K> keyConverter, FlatValueConverter<V> valueConverter, SqlValueConverter<K> sqlKeyConverter, SqlValueConverter<V> sqlValueConverter) {
+            public <K, V> DataStorage<K, V> getStorage(String name, FlatValueConverter<K> keyConverter, FlatValueConverter<V> valueConverter) {
                 return new PropertiesDataStorage<>(setting.baseFolder(), name, keyConverter, valueConverter);
             }
         };
         this.supplierMap.put("flat", defaultSupplier);
-        this.supplierMap.put("yaml", setting -> new DataStorageSupplier() {
+        this.supplierMap.put("yaml", setting -> new FlatDataStorageSupplier() {
             @Override
-            public <K, V> DataStorage<K, V> getStorage(String name, FlatValueConverter<K> keyConverter, FlatValueConverter<V> valueConverter, SqlValueConverter<K> sqlKeyConverter, SqlValueConverter<V> sqlValueConverter) {
+            public <K, V> DataStorage<K, V> getStorage(String name, FlatValueConverter<K> keyConverter, FlatValueConverter<V> valueConverter) {
                 return new ConfigFileDataStorage<K, V>(setting.baseFolder(), name, keyConverter, valueConverter) {
                     @Override
                     protected Config getConfig(File file) {
@@ -58,9 +59,9 @@ public class SpigotStorageSupplierTemplate implements StorageSupplierTemplate {
                 };
             }
         });
-        this.supplierMap.put("json", setting -> new DataStorageSupplier() {
+        this.supplierMap.put("json", setting -> new FlatDataStorageSupplier() {
             @Override
-            public <K, V> DataStorage<K, V> getStorage(String name, FlatValueConverter<K> keyConverter, FlatValueConverter<V> valueConverter, SqlValueConverter<K> sqlKeyConverter, SqlValueConverter<V> sqlValueConverter) {
+            public <K, V> DataStorage<K, V> getStorage(String name, FlatValueConverter<K> keyConverter, FlatValueConverter<V> valueConverter) {
                 return new ConfigFileDataStorage<K, V>(setting.baseFolder(), name, keyConverter, valueConverter) {
                     @Override
                     protected Config getConfig(File file) {
@@ -76,30 +77,15 @@ public class SpigotStorageSupplierTemplate implements StorageSupplierTemplate {
         });
         this.supplierMap.put("sqlite", setting -> {
             SqliteDataStorageSupplier supplier = new SqliteDataStorageSupplier(setting.baseFolder(), setting.databaseSetting(), JavaSqlClient::new);
-            return new DataStorageSupplier() {
-                @Override
-                public <K, V> DataStorage<K, V> getStorage(String name, FlatValueConverter<K> keyConverter, FlatValueConverter<V> valueConverter, SqlValueConverter<K> sqlKeyConverter, SqlValueConverter<V> sqlValueConverter) {
-                    return supplier.getStorage(name, sqlKeyConverter, sqlValueConverter);
-                }
-            };
+            return SqlDataStorageSupplier.of(supplier);
         });
         this.supplierMap.put("new-sqlite", setting -> {
             SqliteDataStorageSupplier supplier = new NewSqliteDataStorageSupplier(setting.baseFolder(), setting.databaseSetting(), JavaSqlClient::new);
-            return new DataStorageSupplier() {
-                @Override
-                public <K, V> DataStorage<K, V> getStorage(String name, FlatValueConverter<K> keyConverter, FlatValueConverter<V> valueConverter, SqlValueConverter<K> sqlKeyConverter, SqlValueConverter<V> sqlValueConverter) {
-                    return supplier.getStorage(name, sqlKeyConverter, sqlValueConverter);
-                }
-            };
+            return SqlDataStorageSupplier.of(supplier);
         });
         this.supplierMap.put("mysql", setting -> {
             MySqlDataStorageSupplier supplier = new MySqlDataStorageSupplier(setting.databaseSetting(), JavaSqlClient::new);
-            return new DataStorageSupplier() {
-                @Override
-                public <K, V> DataStorage<K, V> getStorage(String name, FlatValueConverter<K> keyConverter, FlatValueConverter<V> valueConverter, SqlValueConverter<K> sqlKeyConverter, SqlValueConverter<V> sqlValueConverter) {
-                    return supplier.getStorage(name, sqlKeyConverter, sqlValueConverter);
-                }
-            };
+            return SqlDataStorageSupplier.of(supplier);
         });
     }
 

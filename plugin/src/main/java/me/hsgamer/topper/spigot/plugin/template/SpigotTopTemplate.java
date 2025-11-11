@@ -19,7 +19,6 @@ import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
 import me.hsgamer.topper.value.core.ValueProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,22 +50,8 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
     }
 
     @Override
-    public boolean isOnline(UUID uuid) {
-        return Bukkit.getPlayer(uuid) != null;
-    }
-
-    @Override
     public String getName(UUID uuid) {
         return Bukkit.getOfflinePlayer(uuid).getName();
-    }
-
-    @Override
-    public boolean hasPermission(UUID uuid, String permission) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player != null) {
-            return player.hasPermission(permission);
-        }
-        return false;
     }
 
     @Override
