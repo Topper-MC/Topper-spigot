@@ -84,6 +84,13 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>alessiodp-repo</id>
+            <url>https://repo.alessiodp.com/releases/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>me.hsgamer</groupId>
@@ -256,6 +263,12 @@
             <groupId>net.luckperms</groupId>
             <artifactId>api</artifactId>
             <version>5.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alessiodp.lastloginapi</groupId>
+            <artifactId>lastloginapi-api</artifactId>
+            <version>1.7.4</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

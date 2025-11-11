@@ -2,6 +2,7 @@ package me.hsgamer.topper.spigot.plugin.hook;
 
 import io.github.projectunified.minelib.plugin.base.Loadable;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
+import me.hsgamer.topper.spigot.plugin.hook.lastloginapi.LastLoginAPIHook;
 import me.hsgamer.topper.spigot.plugin.hook.luckperms.LuckPermsHook;
 import me.hsgamer.topper.spigot.plugin.hook.miniplaceholders.MiniPlaceholdersHook;
 import me.hsgamer.topper.spigot.plugin.hook.placeholderapi.PlaceholderAPIHook;
@@ -30,6 +31,9 @@ public class HookSystem implements Loadable {
         }
         if (isPluginLoaded("LuckPerms")) {
             hooks.add(new LuckPermsHook(instance));
+        }
+        if (isPluginLoaded("LastLoginAPI")) {
+            hooks.add(new LastLoginAPIHook(instance));
         }
     }
 

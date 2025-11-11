@@ -6,4 +6,5 @@ softdepend:
   - PlaceholderAPI
   - MiniPlaceholders
   - LuckPerms
+  - LastLoginAPI
 folia-supported: true
