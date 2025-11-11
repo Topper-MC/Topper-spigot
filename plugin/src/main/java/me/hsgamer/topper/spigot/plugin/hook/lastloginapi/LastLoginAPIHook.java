@@ -6,12 +6,14 @@ import io.github.projectunified.minelib.plugin.base.Loadable;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.manager.NameProviderManager;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.alessiodp.lastloginapi.api.LastLogin.getApi;
 
 public class LastLoginAPIHook implements Loadable {
     private final TopperPlugin plugin;
+    private Runnable disableRunnable;
 
     public LastLoginAPIHook(TopperPlugin plugin) {
         this.plugin = plugin;
@@ -19,12 +21,19 @@ public class LastLoginAPIHook implements Loadable {
 
     @Override
     public void enable() {
-        plugin.get(NameProviderManager.class).setNameProvider(this::getName);
+        disableRunnable = plugin.get(NameProviderManager.class).addNameProvider(this::getName);
     }
 
-    private String getName(UUID uuid) {
+    @Override
+    public void disable() {
+        if (disableRunnable != null) {
+            disableRunnable.run();
+        }
+    }
+
+    private Optional<String> getName(UUID uuid) {
         LastLoginAPI api = getApi();
         LastLoginPlayer player = api.getPlayer(uuid);
-        return player.getName();
+        return Optional.of(player.getName()).filter(name -> !name.isEmpty());
     }
 }
