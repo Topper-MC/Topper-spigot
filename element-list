@@ -5,6 +5,7 @@ me.hsgamer.topper.spigot.plugin.config
 me.hsgamer.topper.spigot.plugin.config.converter
 me.hsgamer.topper.spigot.plugin.event
 me.hsgamer.topper.spigot.plugin.hook
+me.hsgamer.topper.spigot.plugin.hook.lastloginapi
 me.hsgamer.topper.spigot.plugin.hook.luckperms
 me.hsgamer.topper.spigot.plugin.hook.miniplaceholders
 me.hsgamer.topper.spigot.plugin.hook.placeholderapi
