@@ -81,7 +81,7 @@ public interface MainConfig {
     @ConfigPath(value = "cache-usernames")
     @Comment({
             "If usernames should use a simple cache to prevent high allocation rates caused by offline username lookups.",
-            "This has the tradeoff of ever so slightly higher memory use (should generally be unnoticeable)."
+            "In most cases this should reduce memory usage and GC churn."
     })
     default boolean isCacheUsernames() {
         return false;
