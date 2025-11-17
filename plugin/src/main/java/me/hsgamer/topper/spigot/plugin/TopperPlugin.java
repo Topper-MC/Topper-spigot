@@ -1,5 +1,7 @@
 package me.hsgamer.topper.spigot.plugin;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import io.github.projectunified.minelib.plugin.base.BasePlugin;
 import io.github.projectunified.minelib.plugin.command.CommandComponent;
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
@@ -20,9 +22,16 @@ import org.bukkit.Bukkit;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class TopperPlugin extends BasePlugin {
+    private final Cache<UUID, String> usernameCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterAccess(15, TimeUnit.MINUTES)
+            .build();
+
     @Override
     protected List<Object> getComponents() {
         return Arrays.asList(
@@ -48,7 +57,21 @@ public class TopperPlugin extends BasePlugin {
     @Override
     public void load() {
         MessageUtils.setPrefix(get(MessageConfig.class)::getPrefix);
-        get(SpigotTopTemplate.class).getNameProviderManager().setDefaultNameProvider(uuid -> Bukkit.getOfflinePlayer(uuid).getName());
+        if (get(MainConfig.class).isCacheUsernames()) {
+            get(SpigotTopTemplate.class)
+                    .getNameProviderManager()
+                    .setDefaultNameProvider(uuid -> {
+                        try {
+                            return usernameCache.get(uuid, () -> Bukkit.getOfflinePlayer(uuid).getName());
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+        } else {
+            get(SpigotTopTemplate.class)
+                    .getNameProviderManager()
+                    .setDefaultNameProvider(uuid -> Bukkit.getOfflinePlayer(uuid).getName());
+        }
     }
 
     @Override

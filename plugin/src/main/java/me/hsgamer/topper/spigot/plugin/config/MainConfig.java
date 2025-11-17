@@ -78,6 +78,15 @@ public interface MainConfig {
         return "flat";
     }
 
+    @ConfigPath(value = "cache-usernames")
+    @Comment({
+            "If usernames should use a simple cache to prevent high allocation rates caused by offline username lookups.",
+            "This has the tradeoff of ever so slightly higher memory use (should generally be unnoticeable)."
+    })
+    default boolean isCacheUsernames() {
+        return false;
+    }
+
     void reloadConfig();
 
     Config getConfig();
