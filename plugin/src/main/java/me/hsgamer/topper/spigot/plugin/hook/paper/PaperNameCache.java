@@ -22,18 +22,25 @@ public class PaperNameCache implements Function<UUID, String> {
             Object dedicatedServer = getDedicatedServerMethod.invoke(server);
             Class<?> dedicatedServerClass = dedicatedServer.getClass();
 
-            Method servicesMethod = dedicatedServerClass.getMethod("services");
-            Object services = servicesMethod.invoke(dedicatedServer);
-            Class<?> serviceClass = services.getClass();
-
-            Method nameToIdCacheMethod = serviceClass.getMethod("nameToIdCache");
-            Object nameToIdCache = nameToIdCacheMethod.invoke(services);
-            Class<?> nameToIdCacheClass = nameToIdCache.getClass();
+            Object nameToIdCache;
+            Class<?> nameToIdCacheClass;
+            try {
+                Method servicesMethod = dedicatedServerClass.getMethod("services");
+                Object services = servicesMethod.invoke(dedicatedServer);
+                Class<?> serviceClass = services.getClass();
+                Method nameToIdCacheMethod = serviceClass.getMethod("nameToIdCache");
+                nameToIdCache = nameToIdCacheMethod.invoke(services);
+            } catch (Throwable e) {
+                Method nameToIdCacheMethod = dedicatedServerClass.getMethod("getProfileCache");
+                nameToIdCache = nameToIdCacheMethod.invoke(dedicatedServer);
+            }
+            Object finalNameToIdCache = nameToIdCache;
+            nameToIdCacheClass = nameToIdCache.getClass();
 
             Method getByIdMethod = nameToIdCacheClass.getMethod("get", UUID.class);
             getProfileFunction = uuid -> {
                 try {
-                    Object optionalProfile = getByIdMethod.invoke(nameToIdCache, uuid);
+                    Object optionalProfile = getByIdMethod.invoke(finalNameToIdCache, uuid);
                     if (optionalProfile instanceof Optional<?>) {
                         return (Optional<?>) optionalProfile;
                     } else {
@@ -44,20 +51,37 @@ public class PaperNameCache implements Function<UUID, String> {
                 }
             };
 
-            Class<?> nameAndIdClass = Class.forName("net.minecraft.server.players.NameAndId");
-            Method nameMethod = nameAndIdClass.getMethod("name");
-            getNameFromProfileFunction = profile -> {
-                try {
-                    Object name = nameMethod.invoke(profile);
-                    if (name instanceof String) {
-                        return (String) name;
-                    } else {
+            try {
+                Class<?> nameAndIdClass = Class.forName("net.minecraft.server.players.NameAndId");
+                Method nameMethod = nameAndIdClass.getMethod("name");
+                getNameFromProfileFunction = profile -> {
+                    try {
+                        Object name = nameMethod.invoke(profile);
+                        if (name instanceof String) {
+                            return (String) name;
+                        } else {
+                            return null;
+                        }
+                    } catch (Throwable e) {
                         return null;
                     }
-                } catch (Throwable e) {
-                    return null;
-                }
-            };
+                };
+            } catch (Throwable e) {
+                Class<?> gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
+                Method getNameMethod = gameProfileClass.getMethod("getName");
+                getNameFromProfileFunction = profile -> {
+                    try {
+                        Object name = getNameMethod.invoke(profile);
+                        if (name instanceof String) {
+                            return (String) name;
+                        } else {
+                            return null;
+                        }
+                    } catch (Throwable ignored) {
+                        return null;
+                    }
+                };
+            }
         } catch (Throwable ignored) {
             // IGNORED
         }
