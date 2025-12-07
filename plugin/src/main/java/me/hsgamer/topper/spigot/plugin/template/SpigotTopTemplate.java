@@ -35,7 +35,27 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
     private final TopperPlugin plugin;
 
     public SpigotTopTemplate(TopperPlugin plugin) {
-        super(new SpigotTopTemplateSettings(plugin));
+        super(new Settings() {
+            @Override
+            public Map<String, NumberTopHolder.Settings> holders() {
+                return plugin.get(MainConfig.class).getHolders();
+            }
+
+            @Override
+            public int taskSaveEntryPerTick() {
+                return plugin.get(MainConfig.class).getTaskSaveEntryPerTick();
+            }
+
+            @Override
+            public int taskUpdateEntryPerTick() {
+                return plugin.get(MainConfig.class).getTaskUpdateEntryPerTick();
+            }
+
+            @Override
+            public int taskUpdateMaxSkips() {
+                return plugin.get(MainConfig.class).getTaskUpdateMaxSkips();
+            }
+        });
         this.plugin = plugin;
     }
 
@@ -49,10 +69,29 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
         return plugin.get(ValueProviderManager.class).build(settings);
     }
 
-    @Override
-    public Agent createTaskAgent(Runnable runnable, boolean async, long delay) {
+    private Agent createTask(Runnable runnable, boolean async, long delay) {
         return new SpigotRunnableAgent(runnable, async ? AsyncScheduler.get(plugin) : GlobalScheduler.get(plugin), delay);
     }
+
+    @Override
+    public Agent createTask(Runnable runnable, NumberTopHolder.TaskType taskType) {
+        MainConfig mainConfig = plugin.get(MainConfig.class);
+        switch (taskType) {
+            case SET:
+                return createTask(runnable, true, mainConfig.getTaskUpdateSetDelay());
+            case STORAGE:
+                return createTask(runnable, true, mainConfig.getTaskSaveDelay());
+            case SNAPSHOT:
+            default:
+                return createTask(runnable, true, 20L);
+        }
+    }
+
+    @Override
+    public Agent createUpdateTask(Runnable runnable, boolean async) {
+        return createTask(runnable, async, plugin.get(MainConfig.class).getTaskUpdateDelay());
+    }
+
 
     @Override
     public void logWarning(String message, @Nullable Throwable throwable) {
