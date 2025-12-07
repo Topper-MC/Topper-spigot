@@ -5,6 +5,7 @@ import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.hook.lastloginapi.LastLoginAPIHook;
 import me.hsgamer.topper.spigot.plugin.hook.luckperms.LuckPermsHook;
 import me.hsgamer.topper.spigot.plugin.hook.miniplaceholders.MiniPlaceholdersHook;
+import me.hsgamer.topper.spigot.plugin.hook.paper.PaperHook;
 import me.hsgamer.topper.spigot.plugin.hook.placeholderapi.PlaceholderAPIHook;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class HookSystem implements Loadable {
         if (isPluginLoaded("LastLoginAPI")) {
             hooks.add(new LastLoginAPIHook(instance));
         }
+        hooks.add(new PaperHook(instance));
     }
 
     @Override
