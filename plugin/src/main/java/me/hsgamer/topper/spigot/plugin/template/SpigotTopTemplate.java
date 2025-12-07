@@ -92,7 +92,6 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
         return createTask(runnable, async, plugin.get(MainConfig.class).getTaskUpdateDelay());
     }
 
-
     @Override
     public void logWarning(String message, @Nullable Throwable throwable) {
         plugin.getLogger().log(Level.WARNING, message, throwable);
