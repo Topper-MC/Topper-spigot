@@ -12,8 +12,8 @@ public class PaperNameCache implements Function<UUID, String> {
     private static final Function<Object, String> GET_NAME_FROM_PROFILE_FUNCTION;
 
     static {
-        Function<UUID, Optional<?>> getProfileFunction = null;
-        Function<Object, String> getNameFromProfileFunction = null;
+        Function<UUID, Optional<?>> getProfileFunction;
+        Function<Object, String> getNameFromProfileFunction;
         try {
             Object server = Bukkit.getServer();
             Class<?> serverClass = server.getClass();
@@ -30,9 +30,39 @@ public class PaperNameCache implements Function<UUID, String> {
                 Class<?> serviceClass = services.getClass();
                 Method nameToIdCacheMethod = serviceClass.getMethod("nameToIdCache");
                 nameToIdCache = nameToIdCacheMethod.invoke(services);
+
+                Class<?> nameAndIdClass = Class.forName("net.minecraft.server.players.NameAndId");
+                Method nameMethod = nameAndIdClass.getMethod("name");
+                getNameFromProfileFunction = profile -> {
+                    try {
+                        Object name = nameMethod.invoke(profile);
+                        if (name instanceof String) {
+                            return (String) name;
+                        } else {
+                            return null;
+                        }
+                    } catch (Throwable e) {
+                        return null;
+                    }
+                };
             } catch (Throwable e) {
                 Method nameToIdCacheMethod = dedicatedServerClass.getMethod("getProfileCache");
                 nameToIdCache = nameToIdCacheMethod.invoke(dedicatedServer);
+
+                Class<?> gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
+                Method getNameMethod = gameProfileClass.getMethod("getName");
+                getNameFromProfileFunction = profile -> {
+                    try {
+                        Object name = getNameMethod.invoke(profile);
+                        if (name instanceof String) {
+                            return (String) name;
+                        } else {
+                            return null;
+                        }
+                    } catch (Throwable ignored) {
+                        return null;
+                    }
+                };
             }
             Object finalNameToIdCache = nameToIdCache;
             nameToIdCacheClass = nameToIdCache.getClass();
@@ -50,40 +80,9 @@ public class PaperNameCache implements Function<UUID, String> {
                     return Optional.empty();
                 }
             };
-
-            try {
-                Class<?> nameAndIdClass = Class.forName("net.minecraft.server.players.NameAndId");
-                Method nameMethod = nameAndIdClass.getMethod("name");
-                getNameFromProfileFunction = profile -> {
-                    try {
-                        Object name = nameMethod.invoke(profile);
-                        if (name instanceof String) {
-                            return (String) name;
-                        } else {
-                            return null;
-                        }
-                    } catch (Throwable e) {
-                        return null;
-                    }
-                };
-            } catch (Throwable e) {
-                Class<?> gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
-                Method getNameMethod = gameProfileClass.getMethod("getName");
-                getNameFromProfileFunction = profile -> {
-                    try {
-                        Object name = getNameMethod.invoke(profile);
-                        if (name instanceof String) {
-                            return (String) name;
-                        } else {
-                            return null;
-                        }
-                    } catch (Throwable ignored) {
-                        return null;
-                    }
-                };
-            }
         } catch (Throwable ignored) {
-            // IGNORED
+            getProfileFunction = null;
+            getNameFromProfileFunction = null;
         }
         GET_PROFILE_FUNCTION = getProfileFunction;
         GET_NAME_FROM_PROFILE_FUNCTION = getNameFromProfileFunction;
