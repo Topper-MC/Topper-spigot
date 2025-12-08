@@ -2,29 +2,27 @@ package me.hsgamer.topper.spigot.plugin.hook.paper;
 
 import org.bukkit.Bukkit;
 
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.logging.Level;
 
+@SuppressWarnings("JavaLangInvokeHandleSignature")
 public class PaperNameCache implements Function<UUID, String> {
-    private static Method createProfileMethod;
-    private static Method completeFromCacheMethod;
-    private static Method getNameMethod;
+    private static MethodHandle createProfileMethod;
+    private static MethodHandle completeFromCacheMethod;
+    private static MethodHandle getNameMethod;
 
     static {
         try {
-            Class<?> profileClass = Class.forName("com.destroystokyo.paper.profile.PlayerProfile");
-            completeFromCacheMethod = profileClass.getMethod("completeFromCache");
-            getNameMethod = profileClass.getMethod("getName");
+            MethodHandles.Lookup publicLookup = MethodHandles.publicLookup();
 
-            Class<?> bukkitClass = Bukkit.class;
-            createProfileMethod = bukkitClass.getMethod("createProfile", UUID.class);
-            Class<?> returnProfileClass = createProfileMethod.getReturnType();
-            if (!profileClass.isAssignableFrom(returnProfileClass)) {
-                throw new UnsupportedOperationException(returnProfileClass.getName());
-            }
-        } catch (Throwable ignored) {
+            Class<?> profileClass = Class.forName("com.destroystokyo.paper.profile.PlayerProfile");
+            completeFromCacheMethod = publicLookup.findVirtual(profileClass, "completeFromCache", MethodType.methodType(boolean.class));
+            getNameMethod = publicLookup.findVirtual(profileClass, "getName", MethodType.methodType(String.class));
+            createProfileMethod = publicLookup.findStatic(Bukkit.class, "createProfile", MethodType.methodType(profileClass, UUID.class));
+        } catch (Throwable e) {
             createProfileMethod = null;
             completeFromCacheMethod = null;
             getNameMethod = null;
@@ -42,10 +40,9 @@ public class PaperNameCache implements Function<UUID, String> {
         if (Bukkit.getPlayer(uuid) != null) return null;
 
         try {
-            Object profile = createProfileMethod.invoke(null, uuid);
+            Object profile = createProfileMethod.invoke(uuid);
             completeFromCacheMethod.invoke(profile);
             String name = (String) getNameMethod.invoke(profile);
-            Bukkit.getLogger().log(Level.INFO, "Paper name: " + name);
             return name != null && !name.isEmpty() ? name : null;
         } catch (Throwable e) {
             return null;
