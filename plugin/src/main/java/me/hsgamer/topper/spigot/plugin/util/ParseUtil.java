@@ -10,7 +10,7 @@ public interface ParseUtil {
                             "There is a problem when parsing your placeholder.",
                             "This is usually not a Topper's issue, but an issue with your placeholder.",
                             "Take a look at the wiki and check against your placeholder settings.",
-                            "https://topper-mc.github.io/Wiki/topper/faq.html"
+                            "https://topper-mc.github.io/Wiki/topper/faq/"
                     ),
                     e
             );

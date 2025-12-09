@@ -14,7 +14,7 @@ public interface MainConfig {
     @Comment({
             "The settings for the Top Holders",
             "Check the wiki for more information on how to setup Top Holder using Value Provider",
-            "https://topper-mc.github.io/Wiki/topper/provider.html"
+            "https://topper-mc.github.io/Wiki/topper/provider/"
     })
     default Map<String, NumberTopHolder.Settings> getHolders() {
         return Collections.emptyMap();
