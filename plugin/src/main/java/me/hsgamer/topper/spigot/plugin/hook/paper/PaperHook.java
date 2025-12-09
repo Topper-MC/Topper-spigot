@@ -15,6 +15,7 @@ public class PaperHook implements Loadable {
     @Override
     public void load() {
         if (PaperNameCache.isAvailable()) {
+            plugin.getLogger().info("Using PaperMC's Cache for Name Provider");
             disableRunnable = plugin.get(SpigotTopTemplate.class).getNameProviderManager().addNameProvider(new PaperNameCache());
         }
     }
