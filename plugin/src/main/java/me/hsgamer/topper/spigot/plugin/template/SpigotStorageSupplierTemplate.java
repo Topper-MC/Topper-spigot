@@ -4,15 +4,10 @@ import me.hsgamer.hscore.bukkit.config.BukkitConfig;
 import me.hsgamer.hscore.config.Config;
 import me.hsgamer.hscore.config.gson.GsonConfig;
 import me.hsgamer.hscore.database.client.sql.java.JavaSqlClient;
-import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.storage.core.DataStorage;
 import me.hsgamer.topper.storage.flat.configfile.ConfigFileDataStorage;
-import me.hsgamer.topper.storage.flat.converter.NumberFlatValueConverter;
-import me.hsgamer.topper.storage.flat.converter.UUIDFlatValueConverter;
 import me.hsgamer.topper.storage.flat.core.FlatValueConverter;
 import me.hsgamer.topper.storage.flat.properties.PropertiesDataStorage;
-import me.hsgamer.topper.storage.sql.converter.NumberSqlValueConverter;
-import me.hsgamer.topper.storage.sql.converter.UUIDSqlValueConverter;
 import me.hsgamer.topper.storage.sql.mysql.MySqlDataStorageSupplier;
 import me.hsgamer.topper.storage.sql.sqlite.NewSqliteDataStorageSupplier;
 import me.hsgamer.topper.storage.sql.sqlite.SqliteDataStorageSupplier;
@@ -25,16 +20,13 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
 public class SpigotStorageSupplierTemplate implements StorageSupplierTemplate {
-    private final SpigotDataStorageSupplierSettings dataStorageSupplierSettings;
     private final Map<String, Function<Settings, DataStorageSupplier>> supplierMap;
     private final Function<Settings, DataStorageSupplier> defaultSupplier;
 
-    public SpigotStorageSupplierTemplate(TopperPlugin plugin) {
-        this.dataStorageSupplierSettings = new SpigotDataStorageSupplierSettings(plugin);
+    public SpigotStorageSupplierTemplate() {
         this.supplierMap = new HashMap<>();
         this.defaultSupplier = setting -> new FlatDataStorageSupplier() {
             @Override
@@ -92,14 +84,5 @@ public class SpigotStorageSupplierTemplate implements StorageSupplierTemplate {
     @Override
     public DataStorageSupplier getDataStorageSupplier(Settings settings) {
         return supplierMap.getOrDefault(settings.storageType().toLowerCase(Locale.ROOT), defaultSupplier).apply(settings);
-    }
-
-    public Function<String, DataStorage<UUID, Double>> getNumberStorageSupplier() {
-        return getDataStorageSupplier(dataStorageSupplierSettings).getStorageSupplier(
-                new UUIDFlatValueConverter(),
-                new NumberFlatValueConverter<>(Number::doubleValue),
-                new UUIDSqlValueConverter("uuid"),
-                new NumberSqlValueConverter<>("value", true, Number::doubleValue)
-        );
     }
 }

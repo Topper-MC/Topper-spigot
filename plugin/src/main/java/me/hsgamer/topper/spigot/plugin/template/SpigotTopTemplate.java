@@ -15,6 +15,11 @@ import me.hsgamer.topper.spigot.plugin.event.GenericEntryUpdateEvent;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.query.forward.plugin.PluginContext;
 import me.hsgamer.topper.storage.core.DataStorage;
+import me.hsgamer.topper.storage.flat.converter.NumberFlatValueConverter;
+import me.hsgamer.topper.storage.flat.converter.UUIDFlatValueConverter;
+import me.hsgamer.topper.storage.sql.converter.NumberSqlValueConverter;
+import me.hsgamer.topper.storage.sql.converter.UUIDSqlValueConverter;
+import me.hsgamer.topper.template.storagesupplier.StorageSupplierTemplate;
 import me.hsgamer.topper.template.topplayernumber.TopPlayerNumberTemplate;
 import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
 import me.hsgamer.topper.template.topplayernumber.manager.ReloadManager;
@@ -35,6 +40,7 @@ import java.util.logging.Level;
 
 public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadable {
     private final TopperPlugin plugin;
+    private final SpigotDataStorageSupplierSettings dataStorageSupplierSettings;
 
     public SpigotTopTemplate(TopperPlugin plugin) {
         super(new Settings() {
@@ -59,11 +65,17 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
             }
         });
         this.plugin = plugin;
+        this.dataStorageSupplierSettings = new SpigotDataStorageSupplierSettings(plugin);
     }
 
     @Override
     public Function<String, DataStorage<UUID, Double>> getStorageSupplier() {
-        return plugin.get(SpigotStorageSupplierTemplate.class).getNumberStorageSupplier();
+        return plugin.get(StorageSupplierTemplate.class).getDataStorageSupplier(dataStorageSupplierSettings).getStorageSupplier(
+                new UUIDFlatValueConverter(),
+                new NumberFlatValueConverter<>(Number::doubleValue),
+                new UUIDSqlValueConverter("uuid"),
+                new NumberSqlValueConverter<>("value", true, Number::doubleValue)
+        );
     }
 
     @Override

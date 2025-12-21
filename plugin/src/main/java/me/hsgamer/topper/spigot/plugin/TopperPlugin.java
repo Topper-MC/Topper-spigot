@@ -33,7 +33,7 @@ public class TopperPlugin extends BasePlugin {
 
                 new HookSystem(this),
 
-                new SpigotStorageSupplierTemplate(this),
+                new SpigotStorageSupplierTemplate(),
                 new SpigotTopTemplate(this),
 
                 new Permissions(this),
