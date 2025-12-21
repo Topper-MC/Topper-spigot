@@ -6,6 +6,9 @@ import me.hsgamer.hscore.bukkit.config.BukkitConfig;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.checker.spigotmc.SpigotVersionChecker;
 import me.hsgamer.hscore.config.proxy.ConfigGenerator;
+import me.hsgamer.hscore.database.Setting;
+import me.hsgamer.hscore.database.client.sql.SqlClient;
+import me.hsgamer.hscore.database.client.sql.java.JavaSqlClient;
 import me.hsgamer.topper.spigot.plugin.command.GetTopListCommand;
 import me.hsgamer.topper.spigot.plugin.command.ReloadCommand;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
@@ -13,8 +16,8 @@ import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
 import me.hsgamer.topper.spigot.plugin.hook.HookSystem;
 import me.hsgamer.topper.spigot.plugin.listener.JoinListener;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
-import me.hsgamer.topper.spigot.plugin.template.SpigotStorageSupplierTemplate;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
+import me.hsgamer.topper.spigot.template.storagesupplier.SpigotStorageSupplierTemplate;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 
@@ -33,7 +36,12 @@ public class TopperPlugin extends BasePlugin {
 
                 new HookSystem(this),
 
-                new SpigotStorageSupplierTemplate(),
+                new SpigotStorageSupplierTemplate() {
+                    @Override
+                    public SqlClient<?> getSqlClient(Setting setting) {
+                        return new JavaSqlClient(setting);
+                    }
+                },
                 new SpigotTopTemplate(this),
 
                 new Permissions(this),

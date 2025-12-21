@@ -13,6 +13,7 @@
         <module>plugin</module>
         <module>value</module>
         <module>query-forward</module>
+        <module>template</module>
     </modules>
 
     <name>Topper Spigot</name>
