@@ -3,7 +3,6 @@ package me.hsgamer.topper.spigot.plugin.command;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.topper.spigot.plugin.Permissions;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
-import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import org.bukkit.command.Command;
@@ -25,10 +24,7 @@ public class ReloadCommand extends Command {
         if (!testPermission(sender)) {
             return false;
         }
-        instance.get(SpigotTopTemplate.class).getTopManager().disable();
-        instance.get(MainConfig.class).reloadConfig();
-        instance.get(MessageConfig.class).reloadConfig();
-        instance.get(SpigotTopTemplate.class).getTopManager().enable();
+        instance.get(SpigotTopTemplate.class).reload();
         MessageUtils.sendMessage(sender, instance.get(MessageConfig.class).getSuccess());
         return true;
     }

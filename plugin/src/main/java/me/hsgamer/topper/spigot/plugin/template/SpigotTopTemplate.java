@@ -10,12 +10,14 @@ import me.hsgamer.topper.query.forward.QueryForwardContext;
 import me.hsgamer.topper.spigot.agent.runnable.SpigotRunnableAgent;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
+import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
 import me.hsgamer.topper.spigot.plugin.event.GenericEntryUpdateEvent;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.query.forward.plugin.PluginContext;
 import me.hsgamer.topper.storage.core.DataStorage;
 import me.hsgamer.topper.template.topplayernumber.TopPlayerNumberTemplate;
 import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
+import me.hsgamer.topper.template.topplayernumber.manager.ReloadManager;
 import me.hsgamer.topper.value.core.ValueProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -131,6 +133,13 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
                                         )
                         )
         );
+        getReloadManager().add(new ReloadManager.ReloadEntry() {
+            @Override
+            public void reload() {
+                plugin.get(MainConfig.class).reloadConfig();
+                plugin.get(MessageConfig.class).reloadConfig();
+            }
+        });
     }
 
     public void addQueryForwardContext(Plugin plugin, String name, BiFunction<@Nullable UUID, @NotNull String, @NotNull QueryResult> query) {
