@@ -48,8 +48,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <minelib.version>1.3.0</minelib.version>
-        <topper.version>4.12.0</topper.version>
-        <core.version>4.7.1</core.version>
+        <topper.version>4.13.1</topper.version>
+        <core.version>4.7.2</core.version>
         <java.version>1.8</java.version>
     </properties>
 
