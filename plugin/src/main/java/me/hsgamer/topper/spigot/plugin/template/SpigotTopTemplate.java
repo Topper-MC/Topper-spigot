@@ -26,6 +26,7 @@ import me.hsgamer.topper.template.topplayernumber.manager.ReloadManager;
 import me.hsgamer.topper.value.core.ValueProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -119,6 +120,12 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
                 if (plugin.get(MainConfig.class).isLoadAllOfflinePlayers()) {
                     GlobalScheduler.get(plugin).run(() -> {
                         for (OfflinePlayer player : plugin.getServer().getOfflinePlayers()) {
+                            holder.getOrCreateEntry(player.getUniqueId());
+                        }
+                    });
+                } else {
+                    GlobalScheduler.get(plugin).run(() -> {
+                        for (Player player : plugin.getServer().getOnlinePlayers()) {
                             holder.getOrCreateEntry(player.getUniqueId());
                         }
                     });
