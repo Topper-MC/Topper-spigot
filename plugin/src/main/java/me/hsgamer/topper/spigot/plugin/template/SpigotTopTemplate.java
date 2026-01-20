@@ -89,22 +89,24 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
     }
 
     @Override
-    public Agent createTask(Runnable runnable, NumberTopHolder.TaskType taskType) {
+    public Agent createTask(Runnable runnable, NumberTopHolder.TaskType taskType, Map<String, Object> settings) {
         MainConfig mainConfig = plugin.get(MainConfig.class);
         switch (taskType) {
             case SET:
                 return createTask(runnable, true, mainConfig.getTaskUpdateSetDelay());
             case STORAGE:
                 return createTask(runnable, true, mainConfig.getTaskSaveDelay());
-            case SNAPSHOT:
+            case UPDATE: {
+                boolean update = Optional.ofNullable(settings.get("async"))
+                        .map(Object::toString)
+                        .map(String::toLowerCase)
+                        .map(Boolean::parseBoolean)
+                        .orElse(false);
+                return createTask(runnable, update, mainConfig.getTaskUpdateDelay());
+            }
             default:
                 return createTask(runnable, true, 20L);
         }
-    }
-
-    @Override
-    public Agent createUpdateTask(Runnable runnable, boolean async) {
-        return createTask(runnable, async, plugin.get(MainConfig.class).getTaskUpdateDelay());
     }
 
     @Override
