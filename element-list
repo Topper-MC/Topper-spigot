@@ -17,6 +17,7 @@ me.hsgamer.topper.spigot.plugin.util
 me.hsgamer.topper.spigot.query.forward.miniplaceholders
 me.hsgamer.topper.spigot.query.forward.placeholderapi
 me.hsgamer.topper.spigot.query.forward.plugin
+me.hsgamer.topper.spigot.template.storagesupplier
 me.hsgamer.topper.spigot.value.miniplaceholders
 me.hsgamer.topper.spigot.value.placeholderapi
 me.hsgamer.topper.spigot.value.statistic
