@@ -3,7 +3,7 @@
     <parent>
         <groupId>me.hsgamer</groupId>
         <artifactId>topper-spigot</artifactId>
-        <version>4.5.0</version>
+        <version>4.6.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -95,6 +95,11 @@
         <dependency>
             <groupId>me.hsgamer</groupId>
             <artifactId>topper-template-top-player-number</artifactId>
+            <version>${topper.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.hsgamer</groupId>
+            <artifactId>topper-template-snapshot-display-line</artifactId>
             <version>${topper.version}</version>
         </dependency>
         <dependency>
