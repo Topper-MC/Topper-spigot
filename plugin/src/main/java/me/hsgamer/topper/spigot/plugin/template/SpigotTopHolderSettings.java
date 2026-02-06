@@ -3,7 +3,6 @@ package me.hsgamer.topper.spigot.plugin.template;
 import me.hsgamer.hscore.common.CollectionUtils;
 import me.hsgamer.topper.agent.update.UpdateAgent;
 import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
-import me.hsgamer.topper.template.topplayernumber.holder.display.ValueDisplay;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,13 +15,11 @@ import java.util.logging.Level;
 
 public class SpigotTopHolderSettings implements NumberTopHolder.Settings {
     private final Map<String, Object> map;
-    private final SpigotValueDisplaySettings valueDisplaySettings;
     private final List<String> ignorePermissions;
     private final List<String> resetPermissions;
 
     public SpigotTopHolderSettings(Map<String, Object> map) {
         this.map = map;
-        this.valueDisplaySettings = new SpigotValueDisplaySettings(map);
         ignorePermissions = CollectionUtils.createStringListFromObject(map.get("ignore-permission"), true);
         resetPermissions = CollectionUtils.createStringListFromObject(map.get("reset-permission"), true);
     }
@@ -43,8 +40,30 @@ public class SpigotTopHolderSettings implements NumberTopHolder.Settings {
     }
 
     @Override
-    public ValueDisplay.Settings displaySettings() {
-        return valueDisplaySettings;
+    public String displayNullName() {
+        return Optional.ofNullable(map.get("null-name"))
+                .map(Object::toString)
+                .orElse("---");
+    }
+
+    @Override
+    public String displayNullUuid() {
+        return Optional.ofNullable(map.get("null-uuid"))
+                .map(Object::toString)
+                .orElse("---");
+    }
+
+    @Override
+    public String displayNullValue() {
+        return Optional.ofNullable(map.get("null-value"))
+                .map(Object::toString)
+                .orElse("---");
+    }
+
+    public String defaultLine() {
+        return Optional.ofNullable(map.get("line"))
+                .map(Object::toString)
+                .orElse(null);
     }
 
     @Override

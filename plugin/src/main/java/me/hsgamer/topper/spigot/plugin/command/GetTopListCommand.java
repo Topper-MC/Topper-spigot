@@ -4,9 +4,9 @@ import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.topper.spigot.plugin.Permissions;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
+import me.hsgamer.topper.spigot.plugin.template.SpigotTopDisplayLine;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
-import me.hsgamer.topper.template.topplayernumber.holder.display.ValueDisplay;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -67,8 +67,8 @@ public class GetTopListCommand extends Command {
             return false;
         }
 
-        ValueDisplay valueDisplay = topHolder.getValueDisplay();
-        List<String> topList = IntStream.rangeClosed(fromIndex, toIndex).mapToObj(index -> valueDisplay.getDisplayLine(index, topHolder)).collect(Collectors.toList());
+        SpigotTopDisplayLine topDisplayLine = new SpigotTopDisplayLine(topHolder);
+        List<String> topList = IntStream.rangeClosed(fromIndex, toIndex).mapToObj(topDisplayLine::display).collect(Collectors.toList());
         if (topList.isEmpty()) {
             sendMessage(sender, instance.get(MessageConfig.class).getTopEmpty());
         } else {

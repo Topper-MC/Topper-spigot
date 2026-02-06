@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -166,7 +167,7 @@ public final class StatisticValueProvider implements ValueProvider<Player, Integ
     }
 
     @Override
-    public @NotNull ValueWrapper<Integer> apply(@NotNull Player player) {
-        return getFunction.apply(player);
+    public void accept(Player player, Consumer<ValueWrapper<Integer>> callback) {
+        callback.accept(getFunction.apply(player));
     }
 }

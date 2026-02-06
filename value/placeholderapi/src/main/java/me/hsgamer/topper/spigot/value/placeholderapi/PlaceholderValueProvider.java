@@ -4,7 +4,8 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.hsgamer.topper.value.core.ValueProvider;
 import me.hsgamer.topper.value.core.ValueWrapper;
 import org.bukkit.OfflinePlayer;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 public class PlaceholderValueProvider implements ValueProvider<OfflinePlayer, String> {
     private final String placeholder;
@@ -22,22 +23,20 @@ public class PlaceholderValueProvider implements ValueProvider<OfflinePlayer, St
     }
 
     @Override
-    public @NotNull ValueWrapper<String> apply(@NotNull OfflinePlayer player) {
-        if (isOnlineOnly && !player.isOnline()) {
-            return ValueWrapper.notHandled();
+    public void accept(OfflinePlayer offlinePlayer, Consumer<ValueWrapper<String>> callback) {
+        if (isOnlineOnly && !offlinePlayer.isOnline()) {
+            callback.accept(ValueWrapper.notHandled());
+            return;
         }
 
         String replaced;
         try {
-            replaced = PlaceholderAPI.setPlaceholders(player, placeholder);
+            replaced = PlaceholderAPI.setPlaceholders(offlinePlayer, placeholder);
         } catch (Exception e) {
-            return ValueWrapper.error("Error while parsing the placeholder: " + placeholder, e);
+            callback.accept(ValueWrapper.error("Error while parsing the placeholder: " + placeholder, e));
+            return;
         }
 
-        if (placeholder.equals(replaced)) {
-            return ValueWrapper.notHandled();
-        }
-
-        return ValueWrapper.handled(replaced);
+        callback.accept(placeholder.equals(replaced) ? ValueWrapper.notHandled() : ValueWrapper.handled(replaced));
     }
 }
