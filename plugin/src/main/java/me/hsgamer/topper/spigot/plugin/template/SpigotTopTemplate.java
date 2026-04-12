@@ -12,6 +12,7 @@ import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
 import me.hsgamer.topper.spigot.plugin.event.GenericEntryUpdateEvent;
+import me.hsgamer.topper.spigot.plugin.hook.HookSystem;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.query.forward.plugin.PluginContext;
 import me.hsgamer.topper.storage.core.DataStorage;
@@ -159,6 +160,11 @@ public class SpigotTopTemplate extends TopPlayerNumberTemplate implements Loadab
             public void reload() {
                 plugin.get(MainConfig.class).reloadConfig();
                 plugin.get(MessageConfig.class).reloadConfig();
+            }
+
+            @Override
+            public void afterReload() {
+                plugin.get(HookSystem.class).reload();
             }
         });
     }

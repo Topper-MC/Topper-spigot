@@ -54,4 +54,12 @@ public class HookSystem implements Loadable {
     public void disable() {
         hooks.forEach(Loadable::disable);
     }
+
+    public void reload() {
+        hooks.forEach(loadable -> {
+            if (loadable instanceof HookReloadable) {
+                ((HookReloadable) loadable).reload();
+            }
+        });
+    }
 }
