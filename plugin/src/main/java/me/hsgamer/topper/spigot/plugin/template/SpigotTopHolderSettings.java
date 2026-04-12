@@ -6,7 +6,10 @@ import me.hsgamer.topper.template.topplayernumber.holder.NumberTopHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public class SpigotTopHolderSettings extends NumberTopHolder.MapSettings {
     private final List<String> ignorePermissions;
