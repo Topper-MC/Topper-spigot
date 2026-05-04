@@ -1,5 +1,7 @@
 package me.hsgamer.topper.spigot.plugin;
 
+import dev.faststats.bukkit.BukkitMetrics;
+import dev.faststats.core.data.Metric;
 import io.github.projectunified.minelib.plugin.base.BasePlugin;
 import io.github.projectunified.minelib.plugin.command.CommandComponent;
 import me.hsgamer.hscore.bukkit.config.BukkitConfig;
@@ -20,6 +22,7 @@ import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import me.hsgamer.topper.spigot.template.storagesupplier.SpigotStorageSupplierTemplate;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 
 import java.util.Arrays;
@@ -63,7 +66,8 @@ public class TopperPlugin extends BasePlugin {
 
     @Override
     public void enable() {
-        new Metrics(this, 14938);
+        loadMetrics();
+
         if (getDescription().getVersion().contains("SNAPSHOT")) {
             getLogger().warning("You are using the development version");
             getLogger().warning("This is not ready for production");
@@ -82,5 +86,16 @@ public class TopperPlugin extends BasePlugin {
                 }
             });
         }
+    }
+
+    private void loadMetrics() {
+        Metrics metrics = new Metrics(this, 14938);
+        metrics.addCustomChart(new SingleLineChart("holders", () -> get(SpigotTopTemplate.class).getTopManager().getHolderNames().size()));
+
+        BukkitMetrics.factory()
+                .token("314aeec477ff85ca7e547c506bebf24b")
+                .addMetric(Metric.number("holders", () -> get(SpigotTopTemplate.class).getTopManager().getHolderNames().size()))
+                .create(this)
+                .ready();
     }
 }

@@ -52,6 +52,10 @@
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>me.hsgamer.topper.spigot.plugin.lib.bstats</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>dev.faststats</pattern>
+                                    <shadedPattern>me.hsgamer.topper.spigot.plugin.lib.faststats</shadedPattern>
+                                </relocation>
                             </relocations>
                             <filters>
                                 <filter>
@@ -88,6 +92,10 @@
         <repository>
             <id>alessiodp-repo</id>
             <url>https://repo.alessiodp.com/releases/</url>
+        </repository>
+        <repository>
+            <id>faststats-releases</id>
+            <url>https://repo.faststats.dev/releases</url>
         </repository>
     </repositories>
 
@@ -153,6 +161,26 @@
             <artifactId>bstats-bukkit</artifactId>
             <version>3.2.1</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.faststats.metrics</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>0.22.0</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jetbrains</groupId>
+                    <artifactId>annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jspecify</groupId>
+                    <artifactId>jspecify</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
