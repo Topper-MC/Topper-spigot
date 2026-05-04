@@ -42,10 +42,11 @@ public class SpigotTopHolderSettings extends NumberTopHolder.MapSettings {
             return UpdateAgent.FilterResult.SKIP;
         }
 
-        if (!resetStates.contains(PermissionCheckManager.State.FALSE) && !ignoreStates.contains(PermissionCheckManager.State.FALSE)) {
-            return UpdateAgent.FilterResult.SKIP;
+        if (resetStates.contains(PermissionCheckManager.State.FALSE) || ignoreStates.contains(PermissionCheckManager.State.FALSE)) {
+            return UpdateAgent.FilterResult.CONTINUE;
         }
 
-        return UpdateAgent.FilterResult.CONTINUE;
+        return UpdateAgent.FilterResult.SKIP;
+
     }
 }
