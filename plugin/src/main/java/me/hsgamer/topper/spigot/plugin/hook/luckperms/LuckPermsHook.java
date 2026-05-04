@@ -8,7 +8,6 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedPermissionData;
 import net.luckperms.api.model.user.User;
-import net.luckperms.api.util.Tristate;
 
 public class LuckPermsHook implements Loadable, HookReloadable {
     private final TopperPlugin instance;
@@ -30,17 +29,7 @@ public class LuckPermsHook implements Loadable, HookReloadable {
                 return PermissionCheckManager.State.UNKNOWN;
             }
             CachedPermissionData permissionData = user.getCachedData().getPermissionData();
-            Tristate state = permissionData.checkPermission(permission);
-            switch (state) {
-                case TRUE:
-                    return PermissionCheckManager.State.TRUE;
-                case FALSE:
-                    return PermissionCheckManager.State.FALSE;
-                case UNDEFINED:
-                    return PermissionCheckManager.State.UNKNOWN;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + state);
-            }
+            return permissionData.checkPermission(permission).asBoolean() ? PermissionCheckManager.State.TRUE : PermissionCheckManager.State.FALSE;
         });
         disableRunnable = () -> {
             api.getContextManager().unregisterCalculator(contextCalculator);
