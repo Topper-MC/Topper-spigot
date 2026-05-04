@@ -15,6 +15,7 @@ import me.hsgamer.topper.spigot.plugin.config.MainConfig;
 import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
 import me.hsgamer.topper.spigot.plugin.hook.HookSystem;
 import me.hsgamer.topper.spigot.plugin.listener.JoinListener;
+import me.hsgamer.topper.spigot.plugin.manager.PermissionCheckManager;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import me.hsgamer.topper.spigot.template.storagesupplier.SpigotStorageSupplierTemplate;
@@ -33,6 +34,7 @@ public class TopperPlugin extends BasePlugin {
                 ConfigGenerator.newInstance(MessageConfig.class, new BukkitConfig(this, "messages.yml")),
 
                 new ValueProviderManager(),
+                new PermissionCheckManager(),
 
                 new HookSystem(this),
 

@@ -3,8 +3,12 @@ package me.hsgamer.topper.spigot.plugin.hook.luckperms;
 import io.github.projectunified.minelib.plugin.base.Loadable;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
 import me.hsgamer.topper.spigot.plugin.hook.HookReloadable;
+import me.hsgamer.topper.spigot.plugin.manager.PermissionCheckManager;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.cacheddata.CachedPermissionData;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.util.Tristate;
 
 public class LuckPermsHook implements Loadable, HookReloadable {
     private final TopperPlugin instance;
@@ -20,7 +24,28 @@ public class LuckPermsHook implements Loadable, HookReloadable {
         LuckPerms api = LuckPermsProvider.get();
         TopContextCalculator contextCalculator = new TopContextCalculator(instance);
         api.getContextManager().registerCalculator(contextCalculator);
-        disableRunnable = () -> api.getContextManager().unregisterCalculator(contextCalculator);
+        Runnable removePermissionCheck = instance.get(PermissionCheckManager.class).addCheck((uuid, permission) -> {
+            User user = api.getUserManager().getUser(uuid);
+            if (user == null) {
+                return PermissionCheckManager.State.UNKNOWN;
+            }
+            CachedPermissionData permissionData = user.getCachedData().getPermissionData();
+            Tristate state = permissionData.checkPermission(permission);
+            switch (state) {
+                case TRUE:
+                    return PermissionCheckManager.State.TRUE;
+                case FALSE:
+                    return PermissionCheckManager.State.FALSE;
+                case UNDEFINED:
+                    return PermissionCheckManager.State.UNKNOWN;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + state);
+            }
+        });
+        disableRunnable = () -> {
+            api.getContextManager().unregisterCalculator(contextCalculator);
+            removePermissionCheck.run();
+        };
         reloadRunnable = contextCalculator::clearCache;
     }
 
