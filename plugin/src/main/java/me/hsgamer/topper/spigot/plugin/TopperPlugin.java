@@ -18,12 +18,12 @@ import me.hsgamer.topper.spigot.plugin.config.MessageConfig;
 import me.hsgamer.topper.spigot.plugin.hook.HookSystem;
 import me.hsgamer.topper.spigot.plugin.listener.JoinListener;
 import me.hsgamer.topper.spigot.plugin.manager.PermissionCheckManager;
+import me.hsgamer.topper.spigot.plugin.manager.OfflinePlayerManager;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import me.hsgamer.topper.spigot.template.storagesupplier.SpigotStorageSupplierTemplate;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
-import org.bukkit.Bukkit;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +38,7 @@ public class TopperPlugin extends BasePlugin {
 
                 new ValueProviderManager(),
                 new PermissionCheckManager(),
+                new OfflinePlayerManager(),
 
                 new HookSystem(this),
 
@@ -61,7 +62,7 @@ public class TopperPlugin extends BasePlugin {
     @Override
     public void load() {
         MessageUtils.setPrefix(get(MessageConfig.class)::getPrefix);
-        get(SpigotTopTemplate.class).getNameProviderManager().setDefaultNameProvider(uuid -> Bukkit.getOfflinePlayer(uuid).getName());
+        get(SpigotTopTemplate.class).getNameProviderManager().setDefaultNameProvider(uuid -> get(OfflinePlayerManager.class).getOfflinePlayer(uuid).getName());
     }
 
     @Override

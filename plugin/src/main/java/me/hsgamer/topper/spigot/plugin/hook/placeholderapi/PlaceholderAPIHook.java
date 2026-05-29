@@ -3,13 +3,13 @@ package me.hsgamer.topper.spigot.plugin.hook.placeholderapi;
 import io.github.projectunified.minelib.plugin.base.Loadable;
 import me.hsgamer.topper.query.forward.QueryForwardContext;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
+import me.hsgamer.topper.spigot.plugin.manager.OfflinePlayerManager;
 import me.hsgamer.topper.spigot.plugin.manager.ValueProviderManager;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import me.hsgamer.topper.spigot.plugin.util.ParseUtil;
 import me.hsgamer.topper.spigot.query.forward.placeholderapi.PlaceholderQueryForwarder;
 import me.hsgamer.topper.spigot.value.placeholderapi.PlaceholderValueProvider;
 import me.hsgamer.topper.value.string.StringDeformatters;
-import org.bukkit.Bukkit;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -35,7 +35,7 @@ public class PlaceholderAPIHook implements Loadable {
             return new PlaceholderValueProvider(placeholder, isOnlineOnly)
                     .thenApply(StringDeformatters.deformatterOrIdentity(map))
                     .thenApply(ParseUtil::parsePlaceholderNumber)
-                    .beforeApply(Bukkit::getOfflinePlayer);
+                    .beforeApply(plugin.get(OfflinePlayerManager.class)::getOfflinePlayer);
         }, "placeholderapi", "placeholder", "papi");
         plugin.get(SpigotTopTemplate.class).getQueryForwardManager().addForwarder(queryForwarder);
     }

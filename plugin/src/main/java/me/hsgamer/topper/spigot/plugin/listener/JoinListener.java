@@ -2,6 +2,7 @@ package me.hsgamer.topper.spigot.plugin.listener;
 
 import io.github.projectunified.minelib.plugin.listener.ListenerComponent;
 import me.hsgamer.topper.spigot.plugin.TopperPlugin;
+import me.hsgamer.topper.spigot.plugin.manager.OfflinePlayerManager;
 import me.hsgamer.topper.spigot.plugin.template.SpigotTopTemplate;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -15,6 +16,7 @@ public class JoinListener implements ListenerComponent {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        instance.get(OfflinePlayerManager.class).cache(event.getPlayer());
         instance.get(SpigotTopTemplate.class).getTopManager().create(event.getPlayer().getUniqueId());
     }
 }

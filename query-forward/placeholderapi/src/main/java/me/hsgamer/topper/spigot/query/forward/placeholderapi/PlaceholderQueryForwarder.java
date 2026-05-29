@@ -1,5 +1,7 @@
 package me.hsgamer.topper.spigot.query.forward.placeholderapi;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.hsgamer.topper.query.forward.QueryForwardContext;
 import me.hsgamer.topper.spigot.query.forward.plugin.PluginContext;
@@ -10,11 +12,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class PlaceholderQueryForwarder<C extends QueryForwardContext<UUID>> implements Consumer<C> {
     private final List<PlaceholderExpansion> expansions = new ArrayList<>();
     private final Plugin defaultPlugin;
+    private final Cache<String, String> resultCache = Caffeine.newBuilder()
+            .maximumSize(10_000)
+            .expireAfterWrite(1, TimeUnit.SECONDS)
+            .build();
 
     public PlaceholderQueryForwarder(Plugin defaultPlugin) {
         this.defaultPlugin = defaultPlugin;
@@ -46,7 +53,9 @@ public class PlaceholderQueryForwarder<C extends QueryForwardContext<UUID>> impl
 
             @Override
             public String onRequest(OfflinePlayer player, @NotNull String params) {
-                return context.getQuery().apply(player != null ? player.getUniqueId() : null, params).result;
+                UUID uuid = player != null ? player.getUniqueId() : null;
+                String cacheKey = context.getName() + '\u0000' + params + '\u0000' + uuid;
+                return resultCache.get(cacheKey, key -> context.getQuery().apply(uuid, params).result);
             }
         };
         expansion.register();
@@ -56,5 +65,6 @@ public class PlaceholderQueryForwarder<C extends QueryForwardContext<UUID>> impl
     public void unregister() {
         expansions.forEach(PlaceholderExpansion::unregister);
         expansions.clear();
+        resultCache.invalidateAll();
     }
 }

@@ -51,6 +51,7 @@
         <minelib.version>1.3.0</minelib.version>
         <topper.version>4.19.1</topper.version>
         <core.version>4.8.1</core.version>
+        <caffeine.version>2.9.3</caffeine.version>
         <java.version>1.8</java.version>
     </properties>
 
